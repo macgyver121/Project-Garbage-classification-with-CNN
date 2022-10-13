@@ -55,5 +55,46 @@ test_data = data_gen.flow_from_directory(data_dir,
 - rescale รูปภาพเป็น 224*224 pixel
 - batch size = ..........
 
+### Check data type and shape 
+```
+print( f"x_train: type={type(x_train)} , dtype={x_train.dtype} , shape={x_train.shape} , min={x_train.min(axis=None)} , max={x_train.max(axis=None)}" )
+print( f"x_test: type={type(x_test)} , dtype={x_test.dtype} , shape={x_test.shape} , min={x_test.min(axis=None)} , max={x_test.max(axis=None)}" )
+```
 
+.......
 
+### Check data distribution
+```
+df_train = pd.DataFrame(y_train, columns = ['class'])
+df_test = pd.DataFrame(y_test, columns = ['class'])
+
+df_train_count = pd.DataFrame(df_train.groupby(['class'])['class'].count())
+
+df_train_count.plot.bar()
+```
+ใส่รูป
+จากกราฟแสดงให้เห็นปริมาณข้อมูลของแต่ละclass ของ train dataset ว่ามีการกระจายตัวที่ใกล้เคียงกัน
+
+```
+df_test_count = pd.DataFrame(df_test.groupby(['class'])['class'].count())
+df_test_count
+
+df_test_count.plot.bar()
+```
+ใสรูป
+จากกราฟแสดงให้เห็นปริมาณข้อมูลของแต่ละclass ของ test dataset ว่ามีการกระจายตัวที่ใกล้เคียงกัน เช่นกัน
+
+```
+https://medium.com/geekculture/eda-for-image-classification-dcada9f2567a
+```
+
+### Visualize the images in x_train
+```
+plt.figure(figsize=(10,5))
+for i in range(0,10):
+    plt.title( f"{class_names[ int(y_train[i]) ]} [true = {int(y_train[i])} ]") 
+    plt.imshow( x_train[i] )  
+    plt.tight_layout()       
+    plt.show()
+```
+ใส่รูป
