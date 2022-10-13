@@ -10,6 +10,7 @@
 โดยเราจะทำการแยกขยะออกเป็น 4 ประเภท ตามสถาบัรพลาสติก กระทรวงอุตสาหกรรม ดังนี้
 
 ![MicrosoftTeams-image (9)](https://user-images.githubusercontent.com/85028821/195612748-2e4ba3eb-ef39-4c8d-b88a-53fb236c00bf.png)
+Figure 1 (CP for Sustainability, 2020)
 
 ดังนั้น ทางกลุ่มเราจึงเลือกหยิบกลุ่มตัวอย่างในขยะแต่ละประเภทมาดังนี้
 - ประเภทที่1 : ขยะอินทรีย์ มี 3 กลุ่ม คือ เศษอาหารและเนื้อสัตว์ เศษผักและผลไม้ และเศษใบไม้
@@ -28,7 +29,7 @@ creating tools : https://www.iloveimg.com/
 
 ## Data preprocessing
 ### Import data + split data + scaling data
-ทำการ import image dataset จาก google drive
+ทำการ import image dataset จาก google drive และ ทำ preprocessing input ก่อนนำไปใช้กับ model
 
 ```
 data_dir = '/content/drive/MyDrive/hw2_DADS7202_photo_4class'
@@ -37,7 +38,7 @@ np.random.seed(1234)
 tf.random.set_seed(5678)
 
 # Defining data generator withour Data Augmentation
-data_gen = ImageDataGenerator(rescale = 1/255., validation_split = 0.3)
+data_gen = ImageDataGenerator(preprocessing_function=tf.keras.applications.vgg16.preprocess_input, rescale = 1/255., validation_split = 0.3)
 
 train_data = data_gen.flow_from_directory(data_dir, 
                                           target_size = (224, 224), 
@@ -329,11 +330,6 @@ Trainable params: 16,388
 Non-trainable params: 134,260,544
 
 ### Train the model with transfer learning
-ทำ preprocessing input ก่อนนำไปใช้กับ model
-```
-x_train = tf.keras.applications.vgg16.preprocess_input(x_train)
-x_test = tf.keras.applications.vgg16.preprocess_input(x_test)
-```
 
 ```
 model.compile( loss="sparse_categorical_crossentropy", optimizer="adam", metrics=["acc"] )
@@ -397,3 +393,6 @@ print('Duration: {}'.format(end_time - start_time))
 ![image](https://user-images.githubusercontent.com/85028821/195639641-bf443d41-26fc-47de-981e-e53bd9a1e646.png)
 
 ## Use .... model
+
+Reference
+- CP for Sustainability, 2020, accessed 13 Oct 2022, <https://www.sustainablelife.co/news/detail/74>
