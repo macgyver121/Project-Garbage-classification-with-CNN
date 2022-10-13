@@ -26,4 +26,32 @@
 
 creating tools : https://www.iloveimg.com/
 
+## EDA
+### Import data
+ทำการ import image dataset จาก google drive
+'''
+data_dir = '/content/drive/MyDrive/hw2_DADS7202_photo_4class'
+
+np.random.seed(1234)
+tf.random.set_seed(5678)
+
+# Defining data generator withour Data Augmentation
+data_gen = ImageDataGenerator(preprocessing_function=tf.keras.applications.vgg16.preprocess_input, rescale = 1/255., validation_split = 0.3)
+
+train_data = data_gen.flow_from_directory(data_dir, 
+                                          target_size = (224, 224), 
+                                          batch_size = ....,
+                                          subset = 'training',
+                                          class_mode = 'binary')
+test_data = data_gen.flow_from_directory(data_dir, 
+                                        target_size = (224, 224), 
+                                        batch_size = ....,
+                                        subset = 'testing',
+                                        class_mode = 'binary')
+'''
+- ทำการ split data เป็น train และ test สัดส่วน 70:30
+- rescale รูปภาพเป็น 224*224 pixel
+- batch size = ..........
+
+
 
