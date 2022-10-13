@@ -26,8 +26,8 @@
 
 creating tools : https://www.iloveimg.com/
 
-## EDA
-### Import data
+## Data preprocessing
+### Import data + split data + scaling data
 ทำการ import image dataset จาก google drive
 
 ```
@@ -55,6 +55,7 @@ test_data = data_gen.flow_from_directory(data_dir,
 - rescale รูปภาพเป็น 224*224 pixel
 - batch size = ..........
 
+## EDA
 ### Check data type and shape 
 ```
 print( f"x_train: type={type(x_train)} , dtype={x_train.dtype} , shape={x_train.shape} , min={x_train.min(axis=None)} , max={x_train.max(axis=None)}" )
