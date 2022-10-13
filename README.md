@@ -29,6 +29,7 @@ creating tools : https://www.iloveimg.com/
 ## EDA
 ### Import data
 ทำการ import image dataset จาก google drive
+
 '''
 data_dir = '/content/drive/MyDrive/hw2_DADS7202_photo_4class'
 
@@ -49,6 +50,7 @@ test_data = data_gen.flow_from_directory(data_dir,
                                         subset = 'testing',
                                         class_mode = 'binary')
 '''
+
 - ทำการ split data เป็น train และ test สัดส่วน 70:30
 - rescale รูปภาพเป็น 224*224 pixel
 - batch size = ..........
