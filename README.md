@@ -41,19 +41,19 @@ data_gen = ImageDataGenerator(preprocessing_function=tf.keras.applications.vgg16
 
 train_data = data_gen.flow_from_directory(data_dir, 
                                           target_size = (224, 224), 
-                                          batch_size = ....,
+                                          batch_size = 700,
                                           subset = 'training',
                                           class_mode = 'binary')
 test_data = data_gen.flow_from_directory(data_dir, 
                                         target_size = (224, 224), 
-                                        batch_size = ....,
+                                        batch_size = 300,
                                         subset = 'testing',
                                         class_mode = 'binary')
 ```
 
 - ทำการ split data เป็น train และ test สัดส่วน 70:30
 - rescale รูปภาพเป็น 224*224 pixel
-- batch size = ..........
+- batch size = 700 ของ train data และ 300 ของ test data
 
 ## EDA
 ### Check data type and shape 
@@ -61,10 +61,14 @@ test_data = data_gen.flow_from_directory(data_dir,
 print( f"x_train: type={type(x_train)} , dtype={x_train.dtype} , shape={x_train.shape} , min={x_train.min(axis=None)} , max={x_train.max(axis=None)}" )
 print( f"x_test: type={type(x_test)} , dtype={x_test.dtype} , shape={x_test.shape} , min={x_test.min(axis=None)} , max={x_test.max(axis=None)}" )
 ```
-
-.......
+.....
 
 ### Check data distribution
+class1 เป็น ขยะอินทรีย์ อยู่ในตำแหน่ง index 0.0
+class2 เป็น ขยะรีไซเคิล อยู่ในตำแหน่ง index 1.0
+class3 เป็น ขยะทั่วไป อยู่ในตำแหน่ง index 2.0
+class4 เป็น ขยะอันตราย อยู่ในตำแหน่ง index 3.0
+
 ```
 df_train = pd.DataFrame(y_train, columns = ['class'])
 df_test = pd.DataFrame(y_test, columns = ['class'])
@@ -73,7 +77,7 @@ df_train_count = pd.DataFrame(df_train.groupby(['class'])['class'].count())
 
 df_train_count.plot.bar()
 ```
-ใส่รูป
+![image](https://user-images.githubusercontent.com/85028821/195630526-c940029c-ee1c-4782-8624-44227d222843.png)
 จากกราฟแสดงให้เห็นปริมาณข้อมูลของแต่ละclass ของ train dataset ว่ามีการกระจายตัวที่ใกล้เคียงกัน
 
 ```
@@ -82,7 +86,7 @@ df_test_count
 
 df_test_count.plot.bar()
 ```
-ใสรูป
+![image](https://user-images.githubusercontent.com/85028821/195630585-02cdf80d-7dae-4b95-90f7-c1cc4c2ccb87.png)
 จากกราฟแสดงให้เห็นปริมาณข้อมูลของแต่ละclass ของ test dataset ว่ามีการกระจายตัวที่ใกล้เคียงกัน เช่นกัน
 
 ```
@@ -99,3 +103,7 @@ for i in range(0,10):
     plt.show()
 ```
 ใส่รูป
+
+# Model
+## Use original model
+
