@@ -142,6 +142,189 @@ Model: "vgg16"
  |fc2 (Dense)            |     (None, 4096)          |    16781312  |                                                                 
 | predictions (Dense)     |    (None, 1000)           |   4097000   |
 
-Total params: 138,357,544
-Trainable params: 138,357,544
+- Total params: 138,357,544
+- Trainable params: 138,357,544
+- Non-trainable params: 0
+
+ทำการลบ layer สุดท้ายออก 1 layer และดูว่าแต่ละ layer ถูก freeze หรือไม่
+```
+from keras.models import Model
+vgg_extractor= Model(inputs=vgg.input, outputs=vgg.layers[-2].output)
+vgg_extractor.summary()
+
+for i,layer in enumerate(vgg_extractor.layers):  
+    print( f"Layer {i}: name = {layer.name} , trainable = {layer.trainable}" )
+```
+Model: "model_3"
+_________________________________________________________________
+ Layer (type)                Output Shape              Param #   
+=================================================================
+ input_3 (InputLayer)        [(None, 224, 224, 3)]     0         
+                                                                 
+ block1_conv1 (Conv2D)       (None, 224, 224, 64)      1792      
+                                                                 
+ block1_conv2 (Conv2D)       (None, 224, 224, 64)      36928     
+                                                                 
+ block1_pool (MaxPooling2D)  (None, 112, 112, 64)      0         
+                                                                 
+ block2_conv1 (Conv2D)       (None, 112, 112, 128)     73856     
+                                                                 
+ block2_conv2 (Conv2D)       (None, 112, 112, 128)     147584    
+                                                                 
+ block2_pool (MaxPooling2D)  (None, 56, 56, 128)       0         
+                                                                 
+ block3_conv1 (Conv2D)       (None, 56, 56, 256)       295168    
+                                                                 
+ block3_conv2 (Conv2D)       (None, 56, 56, 256)       590080    
+                                                                 
+ block3_conv3 (Conv2D)       (None, 56, 56, 256)       590080    
+                                                                 
+ block3_pool (MaxPooling2D)  (None, 28, 28, 256)       0         
+                                                                 
+ block4_conv1 (Conv2D)       (None, 28, 28, 512)       1180160   
+                                                                 
+ block4_conv2 (Conv2D)       (None, 28, 28, 512)       2359808   
+                                                                 
+ block4_conv3 (Conv2D)       (None, 28, 28, 512)       2359808   
+                                                                 
+ block4_pool (MaxPooling2D)  (None, 14, 14, 512)       0         
+                                                                 
+ block5_conv1 (Conv2D)       (None, 14, 14, 512)       2359808   
+                                                                 
+ block5_conv2 (Conv2D)       (None, 14, 14, 512)       2359808   
+                                                                 
+ block5_conv3 (Conv2D)       (None, 14, 14, 512)       2359808   
+                                                                 
+ block5_pool (MaxPooling2D)  (None, 7, 7, 512)         0         
+                                                                 
+ flatten (Flatten)           (None, 25088)             0         
+                                                                 
+ fc1 (Dense)                 (None, 4096)              102764544 
+                                                                 
+ fc2 (Dense)                 (None, 4096)              16781312  
+                                                                 
+=================================================================
+Total params: 134,260,544
+Trainable params: 134,260,544
 Non-trainable params: 0
+_________________________________________________________________
+Layer 0: name = input_3 , trainable = True
+Layer 1: name = block1_conv1 , trainable = True
+Layer 2: name = block1_conv2 , trainable = True
+Layer 3: name = block1_pool , trainable = True
+Layer 4: name = block2_conv1 , trainable = True
+Layer 5: name = block2_conv2 , trainable = True
+Layer 6: name = block2_pool , trainable = True
+Layer 7: name = block3_conv1 , trainable = True
+Layer 8: name = block3_conv2 , trainable = True
+Layer 9: name = block3_conv3 , trainable = True
+Layer 10: name = block3_pool , trainable = True
+Layer 11: name = block4_conv1 , trainable = True
+Layer 12: name = block4_conv2 , trainable = True
+Layer 13: name = block4_conv3 , trainable = True
+Layer 14: name = block4_pool , trainable = True
+Layer 15: name = block5_conv1 , trainable = True
+Layer 16: name = block5_conv2 , trainable = True
+Layer 17: name = block5_conv3 , trainable = True
+Layer 18: name = block5_pool , trainable = True
+Layer 19: name = flatten , trainable = True
+Layer 20: name = fc1 , trainable = True
+Layer 21: name = fc2 , trainable = True
+
+ทำการ freeze layer ทั้งหมด
+```
+vgg_extractor.trainable = False
+
+for i,layer in enumerate(vgg_extractor.layers):  
+    print( f"Layer {i}: name = {layer.name} , trainable = {layer.trainable}" )
+```
+Layer 0: name = input_3 , trainable = False
+Layer 1: name = block1_conv1 , trainable = False
+Layer 2: name = block1_conv2 , trainable = False
+Layer 3: name = block1_pool , trainable = False
+Layer 4: name = block2_conv1 , trainable = False
+Layer 5: name = block2_conv2 , trainable = False
+Layer 6: name = block2_pool , trainable = False
+Layer 7: name = block3_conv1 , trainable = False
+Layer 8: name = block3_conv2 , trainable = False
+Layer 9: name = block3_conv3 , trainable = False
+Layer 10: name = block3_pool , trainable = False
+Layer 11: name = block4_conv1 , trainable = False
+Layer 12: name = block4_conv2 , trainable = False
+Layer 13: name = block4_conv3 , trainable = False
+Layer 14: name = block4_pool , trainable = False
+Layer 15: name = block5_conv1 , trainable = False
+Layer 16: name = block5_conv2 , trainable = False
+Layer 17: name = block5_conv3 , trainable = False
+Layer 18: name = block5_pool , trainable = False
+Layer 19: name = flatten , trainable = False
+Layer 20: name = fc1 , trainable = False
+Layer 21: name = fc2 , trainable = False
+
+ทำการเพิ่ม dense layer สุดท้าย โดยมีการจำแนกข้อมูลเป็น 4 class เนื่องจาก เราต้องการทำนายรูปภาพขยะออกเป็น 4 ประเภท
+```
+x = vgg_extractor.output
+
+# Add our custom layer(s) to the end of the existing model 
+
+new_outputs = tf.keras.layers.Dense(4, activation="softmax")(x)
+
+# Construct the main model 
+model = tf.keras.models.Model(inputs=vgg_extractor.inputs, outputs=new_outputs)
+model.summary()
+```
+Model: "model_4"
+_________________________________________________________________
+ Layer (type)                Output Shape              Param #   
+=================================================================
+ input_3 (InputLayer)        [(None, 224, 224, 3)]     0         
+                                                                 
+ block1_conv1 (Conv2D)       (None, 224, 224, 64)      1792      
+                                                                 
+ block1_conv2 (Conv2D)       (None, 224, 224, 64)      36928     
+                                                                 
+ block1_pool (MaxPooling2D)  (None, 112, 112, 64)      0         
+                                                                 
+ block2_conv1 (Conv2D)       (None, 112, 112, 128)     73856     
+                                                                 
+ block2_conv2 (Conv2D)       (None, 112, 112, 128)     147584    
+                                                                 
+ block2_pool (MaxPooling2D)  (None, 56, 56, 128)       0         
+                                                                 
+ block3_conv1 (Conv2D)       (None, 56, 56, 256)       295168    
+                                                                 
+ block3_conv2 (Conv2D)       (None, 56, 56, 256)       590080    
+                                                                 
+ block3_conv3 (Conv2D)       (None, 56, 56, 256)       590080    
+                                                                 
+ block3_pool (MaxPooling2D)  (None, 28, 28, 256)       0         
+                                                                 
+ block4_conv1 (Conv2D)       (None, 28, 28, 512)       1180160   
+                                                                 
+ block4_conv2 (Conv2D)       (None, 28, 28, 512)       2359808   
+                                                                 
+ block4_conv3 (Conv2D)       (None, 28, 28, 512)       2359808   
+                                                                 
+ block4_pool (MaxPooling2D)  (None, 14, 14, 512)       0         
+                                                                 
+ block5_conv1 (Conv2D)       (None, 14, 14, 512)       2359808   
+                                                                 
+ block5_conv2 (Conv2D)       (None, 14, 14, 512)       2359808   
+                                                                 
+ block5_conv3 (Conv2D)       (None, 14, 14, 512)       2359808   
+                                                                 
+ block5_pool (MaxPooling2D)  (None, 7, 7, 512)         0         
+                                                                 
+ flatten (Flatten)           (None, 25088)             0         
+                                                                 
+ fc1 (Dense)                 (None, 4096)              102764544 
+                                                                 
+ fc2 (Dense)                 (None, 4096)              16781312  
+                                                                 
+ dense_3 (Dense)             (None, 4)                 16388     
+                                                                 
+=================================================================
+Total params: 134,276,932
+Trainable params: 16,388
+Non-trainable params: 134,260,544
+
