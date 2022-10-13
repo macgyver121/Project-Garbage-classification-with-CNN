@@ -78,6 +78,7 @@ df_train_count = pd.DataFrame(df_train.groupby(['class'])['class'].count())
 df_train_count.plot.bar()
 ```
 ![image](https://user-images.githubusercontent.com/85028821/195630526-c940029c-ee1c-4782-8624-44227d222843.png)
+
 จากกราฟแสดงให้เห็นปริมาณข้อมูลของแต่ละclass ของ train dataset ว่ามีการกระจายตัวที่ใกล้เคียงกัน
 
 ```
@@ -87,6 +88,7 @@ df_test_count
 df_test_count.plot.bar()
 ```
 ![image](https://user-images.githubusercontent.com/85028821/195630585-02cdf80d-7dae-4b95-90f7-c1cc4c2ccb87.png)
+
 จากกราฟแสดงให้เห็นปริมาณข้อมูลของแต่ละclass ของ test dataset ว่ามีการกระจายตัวที่ใกล้เคียงกัน เช่นกัน
 
 ```
