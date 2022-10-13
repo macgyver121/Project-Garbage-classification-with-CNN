@@ -37,7 +37,7 @@ np.random.seed(1234)
 tf.random.set_seed(5678)
 
 # Defining data generator withour Data Augmentation
-data_gen = ImageDataGenerator(preprocessing_function=tf.keras.applications.vgg16.preprocess_input, rescale = 1/255., validation_split = 0.3)
+data_gen = ImageDataGenerator(rescale = 1/255., validation_split = 0.3)
 
 train_data = data_gen.flow_from_directory(data_dir, 
                                           target_size = (224, 224), 
@@ -61,7 +61,7 @@ test_data = data_gen.flow_from_directory(data_dir,
 print( f"x_train: type={type(x_train)} , dtype={x_train.dtype} , shape={x_train.shape} , min={x_train.min(axis=None)} , max={x_train.max(axis=None)}" )
 print( f"x_test: type={type(x_test)} , dtype={x_test.dtype} , shape={x_test.shape} , min={x_test.min(axis=None)} , max={x_test.max(axis=None)}" )
 ```
-.....
+ใส่รูป
 
 ### Check data distribution
 class1 เป็น ขยะอินทรีย์ อยู่ในตำแหน่ง index 0.0
@@ -328,3 +328,72 @@ Total params: 134,276,932
 Trainable params: 16,388
 Non-trainable params: 134,260,544
 
+### Train the model with transfer learning
+ทำ preprocessing input ก่อนนำไปใช้กับ model
+```
+x_train = tf.keras.applications.vgg16.preprocess_input(x_train)
+x_test = tf.keras.applications.vgg16.preprocess_input(x_test)
+```
+
+```
+model.compile( loss="sparse_categorical_crossentropy", optimizer="adam", metrics=["acc"] )
+```
+ทำการ run model ด้วย x_train และ y_train
+```
+from datetime import datetime
+start_time = datetime.now()
+
+np.random.seed(1234)
+tf.random.set_seed(5678)
+
+from keras import callbacks
+earlystopping = callbacks.EarlyStopping(monitor ="val_loss", 
+                                        mode ="min", patience = 20, 
+                                        restore_best_weights = True)
+
+history = model.fit( x_train , y_train, batch_size=5, epochs=10, verbose=1, validation_split=0.3, callbacks=[earlystopping] )
+
+end_time = datetime.now()
+print('Duration: {}'.format(end_time - start_time))
+```
+![image](https://user-images.githubusercontent.com/85028821/195639145-7113af5a-8d50-4b83-b700-bfe2ee1c0ef2.png)
+
+```
+# Summarize history for accuracy
+plt.figure(figsize=(15,5))
+plt.plot(history.history['acc'])
+plt.plot(history.history['val_acc'])
+plt.title('Train accuracy')
+plt.ylabel('accuracy')
+plt.xlabel('epoch')
+plt.legend(['train', 'val'], loc='upper left')
+plt.grid()
+plt.show()
+
+# Summarize history for loss
+plt.figure(figsize=(15,5))
+plt.plot(history.history['loss'])
+plt.plot(history.history['val_loss'])
+plt.title('Train loss')
+plt.ylabel('loss')
+plt.xlabel('epoch')
+plt.legend(['train', 'val'], loc='upper right')
+plt.grid()
+plt.show()
+```
+![image](https://user-images.githubusercontent.com/85028821/195639387-2865a18b-3b8c-4b47-8690-16e35f94a1a8.png)
+
+### Evaluate on test set 
+```
+# Evaluate the trained model on the test set
+start_time = datetime.now()
+
+results = model.evaluate(x_test, y_test, batch_size=32)
+print( f"{model.metrics_names}: {results}" )
+
+end_time = datetime.now()
+print('Duration: {}'.format(end_time - start_time))
+```
+![image](https://user-images.githubusercontent.com/85028821/195639641-bf443d41-26fc-47de-981e-e53bd9a1e646.png)
+
+## Use .... model
