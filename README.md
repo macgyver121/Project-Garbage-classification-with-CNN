@@ -141,6 +141,7 @@ Model: "vgg16"
  |fc1 (Dense)            |     (None, 4096)         |     102764544 |                                                                 
  |fc2 (Dense)            |     (None, 4096)          |    16781312  |                                                                 
 | predictions (Dense)     |    (None, 1000)           |   4097000   |
+
 Total params: 138,357,544
 Trainable params: 138,357,544
 Non-trainable params: 0
