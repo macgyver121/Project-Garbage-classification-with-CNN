@@ -157,7 +157,7 @@ for i,layer in enumerate(vgg_extractor.layers):
 ```
 Model: "model_3"
 _________________________________________________________________
- Layer (type)                Output Shape              Param #   
+ Layer (type)                Output Shape              Param   
 =================================================================
  input_3 (InputLayer)        [(None, 224, 224, 3)]     0         
                                                                  
@@ -275,7 +275,7 @@ model.summary()
 ```
 Model: "model_4"
 _________________________________________________________________
- Layer (type)                Output Shape              Param #   
+ Layer (type)                Output Shape              Param    
 =================================================================
  input_3 (InputLayer)        [(None, 224, 224, 3)]     0         
                                                                  
