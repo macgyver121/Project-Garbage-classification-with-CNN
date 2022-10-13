@@ -118,10 +118,8 @@ Model: "vgg16"
 
  |Layer (type)            |    Output Shape          |    Param |   
 |--------------------------|--------------------------|-------------|
- |input_3 (InputLayer)    |    [(None, 224, 224, 3)]  |   0     |    
-                                                                 
- |block1_conv1 (Conv2D)   |    (None, 224, 224, 64)   |   1792   |   
-                                                                 
+ |input_3 (InputLayer)    |    [(None, 224, 224, 3)]  |   0     |                                                                     
+ |block1_conv1 (Conv2D)   |    (None, 224, 224, 64)   |   1792   |                                                                    
  |block1_conv2 (Conv2D)   |    (None, 224, 224, 64)    |  36928   |  
                                                                  
  |block1_pool (MaxPooling2D) | (None, 112, 112, 64)    |  0        | 
