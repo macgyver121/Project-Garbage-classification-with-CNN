@@ -274,7 +274,7 @@ model.compile( loss="sparse_categorical_crossentropy", optimizer="adam", metrics
 - optimizer เป็น Adam
 - metrics เป็น accuracy
 
-ทำการ run model ด้วย x_train และ y_train
+ทำการ run model ด้วย x_train และ y_train และมีการกำหนดให้เลือก weight ที่ให้ค่า accuracy มากสุดไปใช้ใน model สุดท้าย โดยใช้ callbacks
 ```
 from datetime import datetime
 start_time = datetime.now()
@@ -295,7 +295,7 @@ print('Duration: {}'.format(end_time - start_time))
 
 ![image](https://user-images.githubusercontent.com/85028821/195815557-b07e583a-1857-42c8-a88f-0f7768d12907.png)
 
-มีการกำหนดเลือก weight ที่ให้ค่า accuracy มากสุดไปใช้ใน model สุดท้าย โดยใช้ callbacks
+กราฟ accuracy และ กราฟ loss
 
 ```
 # Summarize history for accuracy
