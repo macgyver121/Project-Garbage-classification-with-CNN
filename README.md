@@ -2,7 +2,7 @@
 
 จุดประสงค์การศึกษาครั้งนี้เป็นส่วนหนึ่งของวิชา DADS7202 Deep learning คณะสถิติประยุกต์ สาขาวิชาการวิเคราะห์ข้อมูลและวิทยาการข้อมูล(DADS) สถาบันบัณฑิตพัฒนบริหารศาสตร์ โดยมี ผศ.ดร.ฐิติรัตน์ ศิริบวรรัตนกุล เป็นผู้สอน
 
-โดยทำการศึกษาเปรียบเทียบประสิทธิภาพการทำงานระหว่างโมเดลประเภทต่างๆของ  Convolutional Neural Network (CNN) โดยใช้ข้อมูลรูปภาพ เพื่อทำการแยกประเภทขยะ
+โดยทำการศึกษาเพื่อหาโมเดลต่างๆของ Convolutional Neural Network (CNN) ที่สามารถทำการแยกรูปภาพขยะแต่ละประเภทได้ และเปรียบเทียบประสิทธิภาพการทำงานระหว่างโมเดลแต่ละประเภท
 
 # Data
 ## Data source
@@ -65,10 +65,10 @@ print( f"x_test: type={type(x_test)} , dtype={x_test.dtype} , shape={x_test.shap
 ใส่รูป
 
 ### Check data distribution
-class1 เป็น ขยะอินทรีย์ อยู่ในตำแหน่ง index 0.0
-class2 เป็น ขยะรีไซเคิล อยู่ในตำแหน่ง index 1.0
-class3 เป็น ขยะทั่วไป อยู่ในตำแหน่ง index 2.0
-class4 เป็น ขยะอันตราย อยู่ในตำแหน่ง index 3.0
+class1 เป็น ขยะอินทรีย์ แทนด้วยค่า 0.0
+class2 เป็น ขยะรีไซเคิล แทนด้วยค่า 1.0
+class3 เป็น ขยะทั่วไป แทนด้วยค่า 2.0
+class4 เป็น ขยะอันตราย แทนด้วยค่า 3.0
 
 ```
 df_train = pd.DataFrame(y_train, columns = ['class'])
@@ -110,10 +110,11 @@ for i in range(0,10):
 # Model
 ## Use original model
 ### Prepare for transfer learning
-ทำการโหลด Imagenet VGG-16 model มาใช้
+ทำการโหลด Imagenet VGG-16 model มาใช้ โดยไม่เอาในส่วนของ classifier มา
 ```
-vgg = tf.keras.applications.vgg16.VGG16(weights = "imagenet", include_top=True)
-vgg.summary()
+img_w,img_h = 224,224
+vgg_extractor = tf.keras.applications.vgg16.VGG16(weights = "imagenet", include_top=False, input_shape = (img_w, img_h, 3))
+vgg_extractor.summary()
 ```
 Model: "vgg16"
 
@@ -138,108 +139,19 @@ Model: "vgg16"
  |block5_conv2 (Conv2D)   |    (None, 14, 14, 512)     |  2359808   |                                                                
  |block5_conv3 (Conv2D)    |   (None, 14, 14, 512)      | 2359808   |                                                                
  |block5_pool (MaxPooling2D) | (None, 7, 7, 512)        | 0         |                                                              
- |flatten (Flatten)      |     (None, 25088)       |      0         |                                                                
- |fc1 (Dense)            |     (None, 4096)         |     102764544 |                                                                 
- |fc2 (Dense)            |     (None, 4096)          |    16781312  |                                                                 
-| predictions (Dense)     |    (None, 1000)           |   4097000   |
 
-- Total params: 138,357,544
-- Trainable params: 138,357,544
+- Total params: 14,714,688
+- Trainable params: 14,714,688
 - Non-trainable params: 0
 
-ทำการลบ layer สุดท้ายออก 1 layer และดูว่าแต่ละ layer ถูก freeze หรือไม่
-```
-from keras.models import Model
-vgg_extractor= Model(inputs=vgg.input, outputs=vgg.layers[-2].output)
-vgg_extractor.summary()
-
-for i,layer in enumerate(vgg_extractor.layers):  
-    print( f"Layer {i}: name = {layer.name} , trainable = {layer.trainable}" )
-```
-Model: "model_3"
-_________________________________________________________________
- Layer (type)                Output Shape              Param   
-=================================================================
- input_3 (InputLayer)        [(None, 224, 224, 3)]     0         
-                                                                 
- block1_conv1 (Conv2D)       (None, 224, 224, 64)      1792      
-                                                                 
- block1_conv2 (Conv2D)       (None, 224, 224, 64)      36928     
-                                                                 
- block1_pool (MaxPooling2D)  (None, 112, 112, 64)      0         
-                                                                 
- block2_conv1 (Conv2D)       (None, 112, 112, 128)     73856     
-                                                                 
- block2_conv2 (Conv2D)       (None, 112, 112, 128)     147584    
-                                                                 
- block2_pool (MaxPooling2D)  (None, 56, 56, 128)       0         
-                                                                 
- block3_conv1 (Conv2D)       (None, 56, 56, 256)       295168    
-                                                                 
- block3_conv2 (Conv2D)       (None, 56, 56, 256)       590080    
-                                                                 
- block3_conv3 (Conv2D)       (None, 56, 56, 256)       590080    
-                                                                 
- block3_pool (MaxPooling2D)  (None, 28, 28, 256)       0         
-                                                                 
- block4_conv1 (Conv2D)       (None, 28, 28, 512)       1180160   
-                                                                 
- block4_conv2 (Conv2D)       (None, 28, 28, 512)       2359808   
-                                                                 
- block4_conv3 (Conv2D)       (None, 28, 28, 512)       2359808   
-                                                                 
- block4_pool (MaxPooling2D)  (None, 14, 14, 512)       0         
-                                                                 
- block5_conv1 (Conv2D)       (None, 14, 14, 512)       2359808   
-                                                                 
- block5_conv2 (Conv2D)       (None, 14, 14, 512)       2359808   
-                                                                 
- block5_conv3 (Conv2D)       (None, 14, 14, 512)       2359808   
-                                                                 
- block5_pool (MaxPooling2D)  (None, 7, 7, 512)         0         
-                                                                 
- flatten (Flatten)           (None, 25088)             0         
-                                                                 
- fc1 (Dense)                 (None, 4096)              102764544 
-                                                                 
- fc2 (Dense)                 (None, 4096)              16781312  
-                                                                 
-=================================================================
-Total params: 134,260,544
-Trainable params: 134,260,544
-Non-trainable params: 0
-_________________________________________________________________
-Layer 0: name = input_3 , trainable = True
-Layer 1: name = block1_conv1 , trainable = True
-Layer 2: name = block1_conv2 , trainable = True
-Layer 3: name = block1_pool , trainable = True
-Layer 4: name = block2_conv1 , trainable = True
-Layer 5: name = block2_conv2 , trainable = True
-Layer 6: name = block2_pool , trainable = True
-Layer 7: name = block3_conv1 , trainable = True
-Layer 8: name = block3_conv2 , trainable = True
-Layer 9: name = block3_conv3 , trainable = True
-Layer 10: name = block3_pool , trainable = True
-Layer 11: name = block4_conv1 , trainable = True
-Layer 12: name = block4_conv2 , trainable = True
-Layer 13: name = block4_conv3 , trainable = True
-Layer 14: name = block4_pool , trainable = True
-Layer 15: name = block5_conv1 , trainable = True
-Layer 16: name = block5_conv2 , trainable = True
-Layer 17: name = block5_conv3 , trainable = True
-Layer 18: name = block5_pool , trainable = True
-Layer 19: name = flatten , trainable = True
-Layer 20: name = fc1 , trainable = True
-Layer 21: name = fc2 , trainable = True
-
-ทำการ freeze layer ทั้งหมด
+ทำการ freeze layer ทั้งหมดใน feature extractor
 ```
 vgg_extractor.trainable = False
 
 for i,layer in enumerate(vgg_extractor.layers):  
     print( f"Layer {i}: name = {layer.name} , trainable = {layer.trainable}" )
 ```
-Layer 0: name = input_3 , trainable = False
+Layer 0: name = input_15 , trainable = False
 Layer 1: name = block1_conv1 , trainable = False
 Layer 2: name = block1_conv2 , trainable = False
 Layer 3: name = block1_pool , trainable = False
@@ -258,27 +170,28 @@ Layer 15: name = block5_conv1 , trainable = False
 Layer 16: name = block5_conv2 , trainable = False
 Layer 17: name = block5_conv3 , trainable = False
 Layer 18: name = block5_pool , trainable = False
-Layer 19: name = flatten , trainable = False
-Layer 20: name = fc1 , trainable = False
-Layer 21: name = fc2 , trainable = False
 
-ทำการเพิ่ม dense layer สุดท้าย โดยมีการจำแนกข้อมูลเป็น 4 class เนื่องจาก เราต้องการทำนายรูปภาพขยะออกเป็น 4 ประเภท
+ทำการเพิ่มส่วนของ classifier ตาม model ของ VGG16 ใน Keras โดย layer สุดท้ายจะมีการจำแนกข้อมูลเป็น 4 class เนื่องจาก เราต้องการทำนายรูปภาพขยะออกเป็น 4 ประเภท
+
 ```
 x = vgg_extractor.output
 
 # Add our custom layer(s) to the end of the existing model 
-
+x = tf.keras.layers.Flatten()(x)
+x = tf.keras.layers.Dense(4096, activation="relu")(x)
+x = tf.keras.layers.Dense(4096, activation="relu")(x)
 new_outputs = tf.keras.layers.Dense(4, activation="softmax")(x)
 
 # Construct the main model 
 model = tf.keras.models.Model(inputs=vgg_extractor.inputs, outputs=new_outputs)
 model.summary()
 ```
-Model: "model_4"
+
+Model: "model_18"
 _________________________________________________________________
  Layer (type)                Output Shape              Param    
 =================================================================
- input_3 (InputLayer)        [(None, 224, 224, 3)]     0         
+ input_15 (InputLayer)       [(None, 224, 224, 3)]     0         
                                                                  
  block1_conv1 (Conv2D)       (None, 224, 224, 64)      1792      
                                                                  
@@ -316,24 +229,51 @@ _________________________________________________________________
                                                                  
  block5_pool (MaxPooling2D)  (None, 7, 7, 512)         0         
                                                                  
- flatten (Flatten)           (None, 25088)             0         
+ flatten_7 (Flatten)         (None, 25088)             0         
                                                                  
- fc1 (Dense)                 (None, 4096)              102764544 
+ dense_25 (Dense)            (None, 4096)              102764544 
                                                                  
- fc2 (Dense)                 (None, 4096)              16781312  
+ dense_26 (Dense)            (None, 4096)              16781312  
                                                                  
- dense_3 (Dense)             (None, 4)                 16388     
+ dense_27 (Dense)            (None, 4)                 16388     
                                                                  
 =================================================================
-Total params: 134,276,932
-Trainable params: 16,388
-Non-trainable params: 134,260,544
+- Total params: 134,276,932
+- Trainable params: 119,562,244
+- Non-trainable params: 14,714,688
 
-### Train the model with transfer learning
+### Train the model with transfer learning and set seed
 
+ทำการเอาข้อมูลไปเข้า preprocessing ก่อนนำไปใช้ใน model
+```
+np.random.seed(1234)
+tf.random.set_seed(5678)
+
+# Defining data generator withour Data Augmentation
+data_gen = ImageDataGenerator(preprocessing_function=tf.keras.applications.vgg16.preprocess_input, rescale = 1/255., validation_split = 0.3)
+
+train_data = data_gen.flow_from_directory(data_dir, 
+                                          target_size = (224, 224), 
+                                          batch_size = 700,
+                                          subset = 'training',
+                                          class_mode = 'binary')
+test_data = data_gen.flow_from_directory(data_dir, 
+                                        target_size = (224, 224), 
+                                        batch_size = 300,
+                                        subset = 'validation',
+                                        class_mode = 'binary')
+x_train, y_train = train_data.next()
+x_test, y_test = test_data.next()
+```
+
+กำหนด Arguments ต่างๆของ model 
 ```
 model.compile( loss="sparse_categorical_crossentropy", optimizer="adam", metrics=["acc"] )
 ```
+- ค่า loss ใช้ sparse_categorical_crossentropy
+- optimizer เป็น Adam
+- metrics เป็น accuracy
+
 ทำการ run model ด้วย x_train และ y_train
 ```
 from datetime import datetime
@@ -343,16 +283,19 @@ np.random.seed(1234)
 tf.random.set_seed(5678)
 
 from keras import callbacks
-earlystopping = callbacks.EarlyStopping(monitor ="val_loss", 
-                                        mode ="min", patience = 20, 
-                                        restore_best_weights = True)
 
-history = model.fit( x_train , y_train, batch_size=5, epochs=10, verbose=1, validation_split=0.3, callbacks=[earlystopping] )
+checkpointer = tf.keras.callbacks.ModelCheckpoint(filepath="weights.hdf5", monitor = 'val_acc', verbose=1, save_best_only=True)
+
+history = model.fit( x_train , y_train, batch_size=5, epochs=10, verbose=1, validation_split=0.3, callbacks=[checkpointer] )
+model.load_weights('weights.hdf5')
 
 end_time = datetime.now()
 print('Duration: {}'.format(end_time - start_time))
 ```
-![image](https://user-images.githubusercontent.com/85028821/195639145-7113af5a-8d50-4b83-b700-bfe2ee1c0ef2.png)
+
+![image](https://user-images.githubusercontent.com/85028821/195815557-b07e583a-1857-42c8-a88f-0f7768d12907.png)
+
+โดยมีการกำหนดเลือก weight ที่ให้ค่า accuracy มากสุดไปใช้ใน model สุดท้าย โดยกำหนดด้วย callbacks
 
 ```
 # Summarize history for accuracy
@@ -377,9 +320,11 @@ plt.legend(['train', 'val'], loc='upper right')
 plt.grid()
 plt.show()
 ```
-![image](https://user-images.githubusercontent.com/85028821/195639387-2865a18b-3b8c-4b47-8690-16e35f94a1a8.png)
 
-### Evaluate on test set 
+![image](https://user-images.githubusercontent.com/85028821/195815934-5cd5277c-3474-4e4d-a75f-3a452db53365.png)
+
+### Evaluate on test set without seed
+ทำการเอา set seed ในการ train ออก แล้วทำการสร้าง model และ run train กับ test ใหม่ เพื่อหาค่าเฉลี่ยของ accuracy บน test set โดยทำทั้งหมด 3 รอบ
 ```
 # Evaluate the trained model on the test set
 start_time = datetime.now()
@@ -390,7 +335,9 @@ print( f"{model.metrics_names}: {results}" )
 end_time = datetime.now()
 print('Duration: {}'.format(end_time - start_time))
 ```
-![image](https://user-images.githubusercontent.com/85028821/195639641-bf443d41-26fc-47de-981e-e53bd9a1e646.png)
+1.![image](https://user-images.githubusercontent.com/85028821/195639641-bf443d41-26fc-47de-981e-e53bd9a1e646.png)
+2.
+3.
 
 ## Use .... model
 
