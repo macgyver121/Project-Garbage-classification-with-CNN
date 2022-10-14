@@ -326,8 +326,7 @@ plt.show()
 ![image](https://user-images.githubusercontent.com/85028821/195817457-32f46fab-307a-47ea-a65f-15be86a4d69a.png)
 
 
-### Evaluate on test set without seed
-ทำการเอา set seed ในการ train ออก แล้วทำการสร้าง model และ run train กับ test ใหม่ เพื่อหาค่าเฉลี่ยของ accuracy บน test set โดยทำทั้งหมด 3 รอบ
+### Evaluate on test set 
 ```
 # Evaluate the trained model on the test set
 start_time = datetime.now()
@@ -338,9 +337,48 @@ print( f"{model.metrics_names}: {results}" )
 end_time = datetime.now()
 print('Duration: {}'.format(end_time - start_time))
 ```
-  1.
-  2.
-  3.
+
+
+### Evaluate on test set without seed
+ทำการเอา set seed ในการ train ออก แล้วทำการสร้าง model และ run train กับ test ใหม่ เพื่อหาค่าเฉลี่ยของ accuracy บน test set โดยทำทั้งหมด 3 รอบ
+```
+# create model
+img_w,img_h = 224,224
+vgg_extractor = tf.keras.applications.vgg16.VGG16(weights = "imagenet", include_top=False, input_shape = (img_w, img_h, 3))
+vgg_extractor.trainable = False
+x = vgg_extractor.output
+x = tf.keras.layers.Flatten()(x)
+x = tf.keras.layers.Dense(4096, activation="relu")(x)
+x = tf.keras.layers.Dense(4096, activation="relu")(x)
+new_outputs = tf.keras.layers.Dense(4, activation="softmax")(x)
+model = tf.keras.models.Model(inputs=vgg_extractor.inputs, outputs=new_outputs)
+
+#train model without seed
+model.compile( loss="sparse_categorical_crossentropy", optimizer="adam", metrics=["acc"] )
+
+start_time = datetime.now()
+
+checkpointer = tf.keras.callbacks.ModelCheckpoint(filepath="weights.hdf5", monitor = 'val_acc', verbose=1, save_best_only=True)
+
+history = model.fit( x_train , y_train, batch_size=5, epochs=10, verbose=1, validation_split=0.3, callbacks=[checkpointer] )
+model.load_weights('weights.hdf5')
+
+end_time = datetime.now()
+print('Duration: {}'.format(end_time - start_time))
+
+#Evaluate on test set without seed
+start_time = datetime.now()
+
+results = model.evaluate(x_test, y_test, batch_size=32)
+print( f"{model.metrics_names}: {results}" )
+
+end_time = datetime.now()
+print('Duration: {}'.format(end_time - start_time))
+```
+ผลลัพท์ accuracy บน test set 3 รอบคือ
+1.
+2.
+3.
 
 ## Use .... model
 
