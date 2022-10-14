@@ -338,9 +338,9 @@ print( f"{model.metrics_names}: {results}" )
 end_time = datetime.now()
 print('Duration: {}'.format(end_time - start_time))
 ```
-1.![image](https://user-images.githubusercontent.com/85028821/195639641-bf443d41-26fc-47de-981e-e53bd9a1e646.png)
-2.
-3.
+  1.
+  2.
+  3.
 
 ## Use .... model
 
