@@ -108,7 +108,7 @@ for i in range(0,10):
 ใส่รูป
 
 # Model
-## Use original model
+## Use original model (Imagenet VGG-16)
 ### Prepare for transfer learning
 ทำการโหลด Imagenet VGG-16 model มาใช้ โดยไม่เอาในส่วนของ classifier มา
 ```
