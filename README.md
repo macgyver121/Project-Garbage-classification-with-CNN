@@ -295,7 +295,7 @@ print('Duration: {}'.format(end_time - start_time))
 
 ![image](https://user-images.githubusercontent.com/85028821/195815557-b07e583a-1857-42c8-a88f-0f7768d12907.png)
 
-โดยมีการกำหนดเลือก weight ที่ให้ค่า accuracy มากสุดไปใช้ใน model สุดท้าย โดยกำหนดด้วย callbacks
+มีการกำหนดเลือก weight ที่ให้ค่า accuracy มากสุดไปใช้ใน model สุดท้าย โดยใช้ callbacks
 
 ```
 # Summarize history for accuracy
