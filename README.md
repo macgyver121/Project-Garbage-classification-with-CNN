@@ -267,7 +267,7 @@ x_train, y_train = train_data.next()
 x_test, y_test = test_data.next()
 ```
 
-กำหนด Arguments ต่างๆของ model 
+ทำการ compile กำหนด Arguments ต่างๆของ model 
 ```
 model.compile( loss="sparse_categorical_crossentropy", optimizer="adam", metrics=["acc"] )
 ```
