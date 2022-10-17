@@ -243,7 +243,7 @@ _________________________________________________________________
 - Trainable params: 119,562,244
 - Non-trainable params: 14,714,688
 
-Model flow
+Plot Model
 
 ![flow1](https://user-images.githubusercontent.com/85028821/196149170-41bc46ce-3899-48ab-a2a1-2de71ea1c408.png)
 
@@ -418,6 +418,9 @@ new_outputs = tf.keras.layers.Dense(4, activation="softmax")(x)
 # Construct the main model 
 model = tf.keras.models.Model(inputs=vgg_extractor.inputs, outputs=new_outputs)
 ```
+Plot model
+
+![plot2](https://user-images.githubusercontent.com/85028821/196160471-87944299-63d6-4516-8128-7c38e8c4a2a0.png)
 
 ### 1.2 Train the model with transfer learning and set seed
 ทำการเอาข้อมูลไปเข้า preprocessing ก่อนนำไปใช้ใน model
