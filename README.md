@@ -395,7 +395,7 @@ Duration: 0:00:01.460710
 ค่าเฉลี่ย accuracy 3 รอบ ของ test set = 0.6232 
 
 ## 1. Use tuning model (Imagenet VGG-16)
-### Prepare for transfer learning
+### 1.1 Prepare for transfer learning
 ```
 img_w,img_h = 224,224 
 vgg_extractor = tf.keras.applications.vgg16.VGG16(weights = "imagenet", include_top=False, input_shape = (img_w, img_h, 3))
@@ -418,7 +418,7 @@ new_outputs = tf.keras.layers.Dense(4, activation="softmax")(x)
 model = tf.keras.models.Model(inputs=vgg_extractor.inputs, outputs=new_outputs)
 ```
 
-### Train the model with transfer learning and set seed
+### 1.2 Train the model with transfer learning and set seed
 ทำการเอาข้อมูลไปเข้า preprocessing ก่อนนำไปใช้ใน model
 ```
 np.random.seed(1234)
@@ -477,7 +477,7 @@ print('Duration: {}'.format(end_time - start_time))
 ![image](https://user-images.githubusercontent.com/85028821/196158352-1b3acc69-ad29-463e-bc35-dc478a985d5f.png)
 ![image](https://user-images.githubusercontent.com/85028821/196158403-c6cfdf60-0eb9-4a30-be3f-1b5b20412b4e.png)
 
-### Evaluate on test set 
+### 1.3 Evaluate on test set 
 ```
 # Evaluate the trained model on the test set
 start_time = datetime.now()
@@ -492,7 +492,7 @@ print('Duration: {}'.format(end_time - start_time))
 
 ค่า accuracy เมื่อทำการ evaluate บน test set ได้ค่าอยู่ที่ 0.6914 
 
-### Evaluate on test set without seed
+### 1.4 Evaluate on test set without seed
 ทำการเอา set seed ในการ train ออก แล้วทำการสร้าง model และ run train กับ test ใหม่ เพื่อหาค่าเฉลี่ยของ accuracy บน test set โดยทำทั้งหมด 3 รอบ
 ```
  create model
