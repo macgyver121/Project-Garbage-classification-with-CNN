@@ -474,7 +474,8 @@ print('Duration: {}'.format(end_time - start_time))
 
 กราฟ accuracy และ กราฟ loss
 
-ใส่รูป
+![image](https://user-images.githubusercontent.com/85028821/196158352-1b3acc69-ad29-463e-bc35-dc478a985d5f.png)
+![image](https://user-images.githubusercontent.com/85028821/196158403-c6cfdf60-0eb9-4a30-be3f-1b5b20412b4e.png)
 
 ### Evaluate on test set 
 ```
@@ -487,8 +488,55 @@ print( f"{model.metrics_names}: {results}" )
 end_time = datetime.now()
 print('Duration: {}'.format(end_time - start_time))
 ```
-ค่า accuracy เมื่อทำการ evaluate บน test set ได้ค่าอยู่ที่ 0.6208 
+![image](https://user-images.githubusercontent.com/85028821/196158476-bb66cda2-8e8f-45f1-95a9-693f31055b2c.png)
 
+ค่า accuracy เมื่อทำการ evaluate บน test set ได้ค่าอยู่ที่ 0.6914 
+
+### Evaluate on test set without seed
+ทำการเอา set seed ในการ train ออก แล้วทำการสร้าง model และ run train กับ test ใหม่ เพื่อหาค่าเฉลี่ยของ accuracy บน test set โดยทำทั้งหมด 3 รอบ
+```
+ create model
+img_w,img_h = 224,224 
+vgg_extractor = tf.keras.applications.vgg16.VGG16(weights = "imagenet", include_top=False, input_shape = (img_w, img_h, 3))
+vgg_extractor.trainable = False
+vgg_extractor.layers[-2].trainable = True
+vgg_extractor.layers[-1].trainable = True
+x = vgg_extractor.output
+
+x = tf.keras.layers.Flatten()(x)
+x = tf.keras.layers.Dense(4096, activation="relu")(x)
+x = tf.keras.layers.Dense(4096, activation="relu")(x)
+new_outputs = tf.keras.layers.Dense(4, activation="softmax")(x)
+
+model = tf.keras.models.Model(inputs=vgg_extractor.inputs, outputs=new_outputs)
+
+#train model without seed
+alpha = 0.001
+model.compile( loss="sparse_categorical_crossentropy", optimizer=tf.keras.optimizers.Adamax(learning_rate = alpha) , metrics=["acc"] )
+
+start_time = datetime.now()
+checkpointer = tf.keras.callbacks.ModelCheckpoint(filepath="weights.hdf5", monitor = 'val_acc', verbose=1, save_best_only=True)
+
+history = model.fit( x_train , y_train, batch_size=10, epochs=10, verbose=1, validation_split=0.3, callbacks=[checkpointer] )
+model.load_weights('weights.hdf5')
+
+end_time = datetime.now()
+print('Duration: {}'.format(end_time - start_time))
+
+#Evaluate on test set without seed
+start_time = datetime.now()
+
+results = model.evaluate(x_test, y_test, batch_size=32)
+print( f"{model.metrics_names}: {results}" )
+
+end_time = datetime.now()
+print('Duration: {}'.format(end_time - start_time))
+```
+
+ผลลัพท์ accuracy บน test set 3 รอบคือ
+1.
+2.
+3.
 
 Reference
 - CP for Sustainability, 2020, accessed 13 Oct 2022, <https://www.sustainablelife.co/news/detail/74>
