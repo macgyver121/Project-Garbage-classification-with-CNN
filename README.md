@@ -245,7 +245,7 @@ _________________________________________________________________
 
 Plot Model
 
-![flow1](https://user-images.githubusercontent.com/85028821/196149170-41bc46ce-3899-48ab-a2a1-2de71ea1c408.png)
+[![flow1](https://user-images.githubusercontent.com/85028821/196149170-41bc46ce-3899-48ab-a2a1-2de71ea1c408.png)](Link to photo)
 
 ### Train the model with transfer learning and set seed
 
