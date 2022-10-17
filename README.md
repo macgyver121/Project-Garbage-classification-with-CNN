@@ -108,8 +108,8 @@ for i in range(0,10):
 ```
 ![image](https://user-images.githubusercontent.com/85028821/196135569-abdf2d78-f8a6-42e5-9e6c-f2eb927c5d40.png)
 
-# Original Model
-## Use original model (Imagenet VGG-16)
+# Pre-trained Model
+## Use pre-trained model (Imagenet VGG-16)
 ### Prepare for transfer learning
 ทำการโหลด Imagenet VGG-16 model มาใช้ โดยไม่เอาในส่วนของ classifier มา
 ```
@@ -394,8 +394,8 @@ Duration: 0:00:01.460710
 
 ค่าเฉลี่ย accuracy 3 รอบ ของ test set = 0.6232 
 
-# Tuning Model
-## 1. Use tuning model (Imagenet VGG-16)
+# Trained Model
+## 1. Use trained model (Imagenet VGG-16)
 ### 1.1 Prepare for transfer learning
 ```
 img_w,img_h = 224,224 
