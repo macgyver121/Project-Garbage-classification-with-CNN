@@ -39,7 +39,7 @@ np.random.seed(1234)
 tf.random.set_seed(5678)
 
 # Defining data generator withour Data Augmentation
-data_gen = ImageDataGenerator(preprocessing_function=tf.keras.applications.vgg16.preprocess_input, rescale = 1/255., validation_split = 0.3)
+data_gen = ImageDataGenerator(rescale = 1/255., validation_split = 0.3)
 
 train_data = data_gen.flow_from_directory(data_dir, 
                                           target_size = (224, 224), 
