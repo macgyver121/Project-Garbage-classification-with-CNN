@@ -394,7 +394,101 @@ Duration: 0:00:01.460710
 
 ค่าเฉลี่ย accuracy 3 รอบ ของ test set = 0.6232 
 
-## Use .... model
+## 1. Use tuning model (Imagenet VGG-16)
+### Prepare for transfer learning
+```
+img_w,img_h = 224,224 
+vgg_extractor = tf.keras.applications.vgg16.VGG16(weights = "imagenet", include_top=False, input_shape = (img_w, img_h, 3))
+
+# freeze
+vgg_extractor.trainable = False
+
+# tuning last 2 layers
+vgg_extractor.layers[-1].trainable = True
+vgg_extractor.layers[-2].trainable = True
+
+# add classification
+x = vgg_extractor.output
+x = tf.keras.layers.Flatten()(x)
+x = tf.keras.layers.Dense(4096, activation="relu")(x)
+x = tf.keras.layers.Dense(4096, activation="relu")(x)
+new_outputs = tf.keras.layers.Dense(4, activation="softmax")(x)
+
+# Construct the main model 
+model = tf.keras.models.Model(inputs=vgg_extractor.inputs, outputs=new_outputs)
+```
+
+### Train the model with transfer learning and set seed
+ทำการเอาข้อมูลไปเข้า preprocessing ก่อนนำไปใช้ใน model
+```
+np.random.seed(1234)
+tf.random.set_seed(5678)
+
+# Defining data generator withour Data Augmentation
+data_gen = ImageDataGenerator(preprocessing_function=tf.keras.applications.vgg16.preprocess_input, rescale = 1/255., validation_split = 0.3)
+
+train_data = data_gen.flow_from_directory(data_dir, 
+                                          target_size = (224, 224), 
+                                          batch_size = 700,
+                                          subset = 'training',
+                                          class_mode = 'binary')
+test_data = data_gen.flow_from_directory(data_dir, 
+                                        target_size = (224, 224), 
+                                        batch_size = 300,
+                                        subset = 'validation',
+                                        class_mode = 'binary')
+x_train, y_train = train_data.next()
+x_test, y_test = test_data.next()
+```
+
+ทำการ compile กำหนด Arguments ต่างๆของ model 
+```
+alpha = 0.001
+model.compile( loss="sparse_categorical_crossentropy", optimizer=tf.keras.optimizers.Adamax(learning_rate = alpha) , metrics=["acc"] )
+```
+- ค่า loss ใช้ sparse_categorical_crossentropy
+- optimizer เป็น Adamax กำหนดค่า learning rate เป็น 0.01
+- metrics เป็น accuracy
+
+ทำการ run model ด้วย x_train และ y_train และมีการกำหนดให้เลือก weight ที่ให้ค่า accuracy มากสุดไปใช้ใน model สุดท้าย โดยใช้ callbacks
+```
+from datetime import datetime
+start_time = datetime.now()
+
+np.random.seed(1234)
+tf.random.set_seed(5678)
+
+from keras import callbacks
+
+checkpointer = tf.keras.callbacks.ModelCheckpoint(filepath="weights.hdf5", monitor = 'val_acc', verbose=1, save_best_only=True)
+
+history = model.fit( x_train , y_train, batch_size=10, epochs=10, verbose=1, validation_split=0.3, callbacks=[checkpointer] )
+model.load_weights('weights.hdf5')
+
+end_time = datetime.now()
+print('Duration: {}'.format(end_time - start_time))
+```
+![image](https://user-images.githubusercontent.com/85028821/196152611-4cabb8af-7476-47eb-a199-44c7f4af32fe.png)
+
+จะเห็นว่าในการ train ครั้งนี้ค่าที่ดีที่สุดของ accuracy อยู่ที่ 0.9909 และของ validation accuracy อยู่ที่ 0.8360 อยู่ใน epoch ที่ 4 โดยเราจะใช้โมเดลใน epoch อันนี้ ในการไปใช้กับ test set ต่อไป  
+
+กราฟ accuracy และ กราฟ loss
+
+ใส่รูป
+
+### Evaluate on test set 
+```
+# Evaluate the trained model on the test set
+start_time = datetime.now()
+
+results = model.evaluate(x_test, y_test, batch_size=32)
+print( f"{model.metrics_names}: {results}" )
+
+end_time = datetime.now()
+print('Duration: {}'.format(end_time - start_time))
+```
+ค่า accuracy เมื่อทำการ evaluate บน test set ได้ค่าอยู่ที่ 0.6208 
+
 
 Reference
 - CP for Sustainability, 2020, accessed 13 Oct 2022, <https://www.sustainablelife.co/news/detail/74>
