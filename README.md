@@ -342,7 +342,7 @@ print('Duration: {}'.format(end_time - start_time))
 ```
 ![image](https://user-images.githubusercontent.com/85028821/196142277-c9d976e4-ca05-4d28-9276-c8b36a39be79.png)
 
-
+ค่า accuracy เมื่อทำการ evaluate บน test set ได้ค่าอยู่ที่ 0.6208 
 
 ### Evaluate on test set without seed
 ทำการเอา set seed ในการ train ออก แล้วทำการสร้าง model และ run train กับ test ใหม่ เพื่อหาค่าเฉลี่ยของ accuracy บน test set โดยทำทั้งหมด 3 รอบ
@@ -381,9 +381,12 @@ end_time = datetime.now()
 print('Duration: {}'.format(end_time - start_time))
 ```
 ผลลัพท์ accuracy บน test set 3 รอบคือ
-1.
-2.
-3.
+1. ['loss', 'acc']: [1.6552209854125977, 0.6356877088546753]
+Duration: 0:00:01.581440
+2. ['loss', 'acc']: [2.407459020614624, 0.6468401551246643]
+Duration: 0:00:01.448805
+3. ['loss', 'acc']: [1.997439980506897, 0.5873606204986572]
+Duration: 0:00:01.460710
 
 ## Use .... model
 
