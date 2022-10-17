@@ -66,10 +66,10 @@ print( f"x_test: type={type(x_test)} , dtype={x_test.dtype} , shape={x_test.shap
 ใส่รูป
 
 ### Check data distribution
-class1 เป็น ขยะอินทรีย์ แทนด้วยค่า 0.0
-class2 เป็น ขยะรีไซเคิล แทนด้วยค่า 1.0
-class3 เป็น ขยะทั่วไป แทนด้วยค่า 2.0
-class4 เป็น ขยะอันตราย แทนด้วยค่า 3.0
+- class1 เป็น ขยะอินทรีย์ แทนด้วยค่า 0.0
+- class2 เป็น ขยะรีไซเคิล แทนด้วยค่า 1.0
+- class3 เป็น ขยะทั่วไป แทนด้วยค่า 2.0
+- class4 เป็น ขยะอันตราย แทนด้วยค่า 3.0
 
 ```
 df_train = pd.DataFrame(y_train, columns = ['class'])
