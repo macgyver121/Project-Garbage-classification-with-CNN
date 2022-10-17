@@ -106,7 +106,7 @@ for i in range(0,10):
     plt.tight_layout()       
     plt.show()
 ```
-ใส่รูป
+![image](https://user-images.githubusercontent.com/85028821/196135569-abdf2d78-f8a6-42e5-9e6c-f2eb927c5d40.png)
 
 # Model
 ## Use original model (Imagenet VGG-16)
