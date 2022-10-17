@@ -388,6 +388,8 @@ Duration: 0:00:01.448805
 3. ['loss', 'acc']: [1.997439980506897, 0.5873606204986572]
 Duration: 0:00:01.460710
 
+ค่าเฉลี่ย accuracy 3 รอบ ของ test set = 0.6232 
+
 ## Use .... model
 
 Reference
