@@ -542,5 +542,35 @@ print('Duration: {}'.format(end_time - start_time))
 2.
 3.
 
+# Resnet50
+## Original Pre-trained model (Resnet50)
+## Tuning model (Resnet50)
+
+# MobileNet
+## Original Pre-trained model (MobileNet)
+## Tuning model (MobileNet)
+
+# EfficiantNetV2
+## Original Pre-trained model (MobileNet)
+## Tuning model (MobileNet)
+
+# Conclusion
+
+ทำตาราง 8 row
+
+เขียนสรุป
+
+# Member 
+- นส.ศิริวลัย   มณีสินธุ์    6410412011
+- นายศิวกร    ศรีชัยพฤกษ์ 6410412012
+- นายนนทพร  วงษ์เล็ก    6410412016
+- นายธีรพล   แสงเมือง    6410412019
+
 Reference
 - CP for Sustainability, 2020, accessed 13 Oct 2022, <https://www.sustainablelife.co/news/detail/74>
+- https://www.iloveimg.com (resizing tools)
+- François Chollet, 2017, accessed 17 Oct 2022, <https://www.tensorflow.org/tutorials/images/transfer_learning#fine_tuning>
+- deeplizard, (2020 Sept 28), Fine-Tuning MobileNet on Custom Data Set with TensorFlow's Keras API [video].youtube.https://www.youtube.com/watch?v=Zrt76AIbeh4
+- Tammina, S. (2019). Transfer learning using vgg-16 with deep convolutional neural network for classifying images. International Journal of Scientific and Research Publications (IJSRP), 9(10), 143-150.
+- Mukti, I. Z., & Biswas, D. (2019, December). Transfer learning based plant diseases detection using ResNet50. In 2019 4th International conference on electrical information and communication technology (EICT) (pp. 1-6). IEEE.
+- Gavai, N. R., Jakhade, Y. A., Tribhuvan, S. A., & Bhattad, R. (2017, December). MobileNets for flower classification using TensorFlow. In 2017 international conference on big data, IoT and data science (BID) (pp. 154-158). IEEE.
