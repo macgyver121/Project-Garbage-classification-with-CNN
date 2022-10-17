@@ -63,7 +63,7 @@ test_data = data_gen.flow_from_directory(data_dir,
 print( f"x_train: type={type(x_train)} , dtype={x_train.dtype} , shape={x_train.shape} , min={x_train.min(axis=None)} , max={x_train.max(axis=None)}" )
 print( f"x_test: type={type(x_test)} , dtype={x_test.dtype} , shape={x_test.shape} , min={x_test.min(axis=None)} , max={x_test.max(axis=None)}" )
 ```
-ใส่รูป
+![image](https://user-images.githubusercontent.com/85028821/196121107-027efaba-560d-4904-afee-94c1bb4e94cb.png)
 
 ### Check data distribution
 - class1 เป็น ขยะอินทรีย์ แทนด้วยค่า 0.0
