@@ -296,6 +296,8 @@ print('Duration: {}'.format(end_time - start_time))
 
 ![image](https://user-images.githubusercontent.com/85028821/195815557-b07e583a-1857-42c8-a88f-0f7768d12907.png)
 
+จะเห็นว่าในการ train ครั้งนี้ค่าที่ดีที่สุดของ accuracy อยู่ที่ 0.9227 และของ validation accuracy อยู่ที่ 0.8201 อยู่ใน epoch ที่ 3 โดยเราจะใช้โมเดลใน epoch อันนี้ ในการไปใช้กับ test set ต่อไป  
+
 กราฟ accuracy และ กราฟ loss
 
 ```
@@ -338,6 +340,8 @@ print( f"{model.metrics_names}: {results}" )
 end_time = datetime.now()
 print('Duration: {}'.format(end_time - start_time))
 ```
+![image](https://user-images.githubusercontent.com/85028821/196142277-c9d976e4-ca05-4d28-9276-c8b36a39be79.png)
+
 
 
 ### Evaluate on test set without seed
