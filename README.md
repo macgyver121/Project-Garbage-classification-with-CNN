@@ -6,7 +6,7 @@
 
 # Data
 ## Data source
-ข้อมูลเป็นรูปภาพขยะ โดยทำการรวบรวมจาก search engine, ภาพจริง, dataset จาก kaggle ()
+ข้อมูลเป็นรูปภาพขยะ โดยทำการรวบรวมจาก search engine, ภาพจริง, dataset จาก kaggle (https://www.kaggle.com/datasets/mostafaabla/garbage-classification)
 โดยเราจะทำการแยกขยะออกเป็น 4 ประเภท ตามสถาบัรพลาสติก กระทรวงอุตสาหกรรม ดังนี้
 
 ![MicrosoftTeams-image (9)](https://user-images.githubusercontent.com/85028821/195612748-2e4ba3eb-ef39-4c8d-b88a-53fb236c00bf.png)
