@@ -108,8 +108,8 @@ for i in range(0,10):
 ```
 ![image](https://user-images.githubusercontent.com/85028821/196135569-abdf2d78-f8a6-42e5-9e6c-f2eb927c5d40.png)
 
-# VGG-16
-## Original Pre-trained model (VGG-16)
+# 1. VGG-16
+## 1.1 Original Pre-trained model (VGG-16)
 ### Create the base model from the pre-trained convnets
 ทำการโหลด Imagenet VGG-16 model มาใช้ โดยเอาในส่วนของ classifier มาด้วย และลบ layer ที่แบ่งข้อมูลออกเป็น 1000 class
 ```
@@ -285,7 +285,7 @@ Duration: 0:00:01.460710
 
 ค่าเฉลี่ย accuracy 3 รอบ ของ test set = 0.6232 
 
-##  Tuning model (VGG-16)
+## 1.2 Tuning model (VGG-16)
 ### Create feature extractor
 ```
 img_w,img_h = 224,224
