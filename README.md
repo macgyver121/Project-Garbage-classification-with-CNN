@@ -584,7 +584,7 @@ print('Duration: {}'.format(end_time - start_time))
 3. 
 ค่าเฉลี่ย accuracy 3 รอบ ของ test set = 
 
-## 1.2 Tuning model (MobileNet)
+## 3.2 Tuning model (MobileNet)
 ### Create feature extractor
 ```
 img_w,img_h = 224,224
@@ -609,7 +609,9 @@ model.summary()
 ```
 
 Model flow
-ขาดรูป
+
+See in : https://user-images.githubusercontent.com/97573140/196419603-11948fa6-f732-455d-9bac-7c456f63b094.png
+
 
 ### Compile the model
 ```
@@ -635,11 +637,38 @@ model.load_weights('weights.hdf5')
 end_time = datetime.now()
 print('Duration: {}'.format(end_time - start_time))
 ```
-ขาดรูปepoch
+
+![tune-train-epoch](https://user-images.githubusercontent.com/97573140/196420774-cc0dd6f4-0d47-48fb-9d9d-70ac202e0fbe.PNG)
 
 ### Learning curves
+
+# Summarize history for accuracy
+```
+plt.figure(figsize=(15,5))
+plt.plot(history.history['acc'])
+plt.plot(history.history['val_acc'])
+plt.title('Train accuracy')
+plt.ylabel('accuracy')
+plt.xlabel('epoch')
+plt.legend(['train', 'val'], loc='upper left')
+plt.grid()
+plt.show()
+
+# Summarize history for loss
+plt.figure(figsize=(15,5))
+plt.plot(history.history['loss'])
+plt.plot(history.history['val_loss'])
+plt.title('Train loss')
+plt.ylabel('loss')
+plt.xlabel('epoch')
+plt.legend(['train', 'val'], loc='upper right')
+plt.grid()
+plt.show()
+```
 กราฟ accuracy และ กราฟ loss
-ขาดรูป
+![tune-graph1](https://user-images.githubusercontent.com/97573140/196419854-c4fc0252-dac5-443c-a5b3-013fa2ffc699.png)
+![tune-graph2](https://user-images.githubusercontent.com/97573140/196419869-55b1dfce-1b61-4f2f-9308-ffb0a1f40963.png)
+
 
 ### Evaluate on test set
 ```
@@ -652,8 +681,9 @@ print( f"{model.metrics_names}: {results}" )
 end_time = datetime.now()
 print('Duration: {}'.format(end_time - start_time))
 ```
-ขาดรูป
-ค่า accuracy เมื่อทำการ evaluate บน test set ได้ค่าอยู่ที่  
+
+![tune-acc](https://user-images.githubusercontent.com/97573140/196420395-c65c3971-966e-49cc-8609-4edcafe66ff4.PNG)
+ค่า accuracy เมื่อทำการ evaluate บน test set ได้ค่าอยู่ที่ 0.56333
 
 ### Evaluate on test set without seed
 ```
@@ -701,6 +731,7 @@ print('Duration: {}'.format(end_time - start_time))
 1. 0.6133
 2. 0.5400
 3. 0.5733
+
 ค่าเฉลี่ย accuracy 3 รอบ ของ test set  = 0.57553
 
 # EfficiantNetV2
