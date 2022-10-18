@@ -110,146 +110,41 @@ for i in range(0,10):
 
 # VGG-16
 ## Original Pre-trained model (VGG-16)
-### Prepare for transfer learning
-ทำการโหลด Imagenet VGG-16 model มาใช้ โดยไม่เอาในส่วนของ classifier มา
+### Create the base model from the pre-trained convnets
+ทำการโหลด Imagenet VGG-16 model มาใช้ โดยเอาในส่วนของ classifier มาด้วย และลบ layer ที่แบ่งข้อมูลออกเป็น 1000 class
 ```
-img_w,img_h = 224,224
-vgg_extractor = tf.keras.applications.vgg16.VGG16(weights = "imagenet", include_top=False, input_shape = (img_w, img_h, 3))
-vgg_extractor.summary()
+vgg_extractor = tf.keras.applications.vgg16.VGG16(weights = "imagenet", include_top=True)
+
+# delete last layer
+from keras.models import Model
+vgg_extractor= Model(inputs=vgg_extractor.input, outputs=vgg_extractor.layers[-2].output)
 ```
-Model: "vgg16"
-
- |Layer (type)            |    Output Shape          |    Param |   
-|--------------------------|--------------------------|-------------|
- |input_3 (InputLayer)    |    [(None, 224, 224, 3)]  |   0     |                                                                     
- |block1_conv1 (Conv2D)   |    (None, 224, 224, 64)   |   1792   |                                                                    
- |block1_conv2 (Conv2D)   |    (None, 224, 224, 64)    |  36928   |                                                                 
- |block1_pool (MaxPooling2D) | (None, 112, 112, 64)    |  0        |                                                                  
- |block2_conv1 (Conv2D)   |    (None, 112, 112, 128)   |  73856     |                                                                 
- |block2_conv2 (Conv2D)    |   (None, 112, 112, 128)   |  147584    |                                                                 
- |block2_pool (MaxPooling2D) | (None, 56, 56, 128)     |  0         |                                                                 
- |block3_conv1 (Conv2D)   |    (None, 56, 56, 256)    |   295168    |                                                                 
- |block3_conv2 (Conv2D)   |    (None, 56, 56, 256)    |   590080    |                                                                 
- |block3_conv3 (Conv2D)    |   (None, 56, 56, 256)     |  590080    |                                                                 
- |block3_pool (MaxPooling2D) | (None, 28, 28, 256)    |   0         |                                                                 
- |block4_conv1 (Conv2D)   |    (None, 28, 28, 512)    |   1180160   |                                                                 
- |block4_conv2 (Conv2D)    |   (None, 28, 28, 512)     |  2359808   |                                                                 
- |block4_conv3 (Conv2D)    |   (None, 28, 28, 512)      | 2359808   |                                                                
- |block4_pool (MaxPooling2D) | (None, 14, 14, 512)     |  0         |                                                               
- |block5_conv1 (Conv2D)    |   (None, 14, 14, 512)    |   2359808   |                                                                
- |block5_conv2 (Conv2D)   |    (None, 14, 14, 512)     |  2359808   |                                                                
- |block5_conv3 (Conv2D)    |   (None, 14, 14, 512)      | 2359808   |                                                                
- |block5_pool (MaxPooling2D) | (None, 7, 7, 512)        | 0         |                                                              
-
-- Total params: 14,714,688
-- Trainable params: 14,714,688
-- Non-trainable params: 0
-
+### Freeze the convolutional base
 ทำการ freeze layer ทั้งหมดใน feature extractor
 ```
 vgg_extractor.trainable = False
-
-for i,layer in enumerate(vgg_extractor.layers):  
-    print( f"Layer {i}: name = {layer.name} , trainable = {layer.trainable}" )
 ```
-Layer 0: name = input_15 , trainable = False
-Layer 1: name = block1_conv1 , trainable = False
-Layer 2: name = block1_conv2 , trainable = False
-Layer 3: name = block1_pool , trainable = False
-Layer 4: name = block2_conv1 , trainable = False
-Layer 5: name = block2_conv2 , trainable = False
-Layer 6: name = block2_pool , trainable = False
-Layer 7: name = block3_conv1 , trainable = False
-Layer 8: name = block3_conv2 , trainable = False
-Layer 9: name = block3_conv3 , trainable = False
-Layer 10: name = block3_pool , trainable = False
-Layer 11: name = block4_conv1 , trainable = False
-Layer 12: name = block4_conv2 , trainable = False
-Layer 13: name = block4_conv3 , trainable = False
-Layer 14: name = block4_pool , trainable = False
-Layer 15: name = block5_conv1 , trainable = False
-Layer 16: name = block5_conv2 , trainable = False
-Layer 17: name = block5_conv3 , trainable = False
-Layer 18: name = block5_pool , trainable = False
 
+### Add a classification head
 ทำการเพิ่มส่วนของ classifier ตาม model ของ VGG16 ใน Keras โดย layer สุดท้ายจะมีการจำแนกข้อมูลเป็น 4 class เนื่องจาก เราต้องการทำนายรูปภาพขยะออกเป็น 4 ประเภท
 
 ```
 x = vgg_extractor.output
 
 # Add our custom layer(s) to the end of the existing model 
-x = tf.keras.layers.Flatten()(x)
-x = tf.keras.layers.Dense(4096, activation="relu")(x)
-x = tf.keras.layers.Dense(4096, activation="relu")(x)
+
 new_outputs = tf.keras.layers.Dense(4, activation="softmax")(x)
 
 # Construct the main model 
 model = tf.keras.models.Model(inputs=vgg_extractor.inputs, outputs=new_outputs)
-model.summary()
 ```
-
-Model: "model_18"
-_________________________________________________________________
- Layer (type)                Output Shape              Param    
-=================================================================
- input_15 (InputLayer)       [(None, 224, 224, 3)]     0         
-                                                                 
- block1_conv1 (Conv2D)       (None, 224, 224, 64)      1792      
-                                                                 
- block1_conv2 (Conv2D)       (None, 224, 224, 64)      36928     
-                                                                 
- block1_pool (MaxPooling2D)  (None, 112, 112, 64)      0         
-                                                                 
- block2_conv1 (Conv2D)       (None, 112, 112, 128)     73856     
-                                                                 
- block2_conv2 (Conv2D)       (None, 112, 112, 128)     147584    
-                                                                 
- block2_pool (MaxPooling2D)  (None, 56, 56, 128)       0         
-                                                                 
- block3_conv1 (Conv2D)       (None, 56, 56, 256)       295168    
-                                                                 
- block3_conv2 (Conv2D)       (None, 56, 56, 256)       590080    
-                                                                 
- block3_conv3 (Conv2D)       (None, 56, 56, 256)       590080    
-                                                                 
- block3_pool (MaxPooling2D)  (None, 28, 28, 256)       0         
-                                                                 
- block4_conv1 (Conv2D)       (None, 28, 28, 512)       1180160   
-                                                                 
- block4_conv2 (Conv2D)       (None, 28, 28, 512)       2359808   
-                                                                 
- block4_conv3 (Conv2D)       (None, 28, 28, 512)       2359808   
-                                                                 
- block4_pool (MaxPooling2D)  (None, 14, 14, 512)       0         
-                                                                 
- block5_conv1 (Conv2D)       (None, 14, 14, 512)       2359808   
-                                                                 
- block5_conv2 (Conv2D)       (None, 14, 14, 512)       2359808   
-                                                                 
- block5_conv3 (Conv2D)       (None, 14, 14, 512)       2359808   
-                                                                 
- block5_pool (MaxPooling2D)  (None, 7, 7, 512)         0         
-                                                                 
- flatten_7 (Flatten)         (None, 25088)             0         
-                                                                 
- dense_25 (Dense)            (None, 4096)              102764544 
-                                                                 
- dense_26 (Dense)            (None, 4096)              16781312  
-                                                                 
- dense_27 (Dense)            (None, 4)                 16388     
-                                                                 
-=================================================================
-- Total params: 134,276,932
-- Trainable params: 119,562,244
-- Non-trainable params: 14,714,688
 
 Plot Model
 
 See in : https://user-images.githubusercontent.com/85028821/196149170-41bc46ce-3899-48ab-a2a1-2de71ea1c408.png)
 
 
-### Train the model with transfer learning and set seed
-
+### Preprocessing input
 ทำการเอาข้อมูลไปเข้า preprocessing ก่อนนำไปใช้ใน model
 ```
 np.random.seed(1234)
@@ -271,7 +166,7 @@ test_data = data_gen.flow_from_directory(data_dir,
 x_train, y_train = train_data.next()
 x_test, y_test = test_data.next()
 ```
-
+### Compile the model
 ทำการ compile กำหนด Arguments ต่างๆของ model 
 ```
 model.compile( loss="sparse_categorical_crossentropy", optimizer="adam", metrics=["acc"] )
@@ -280,6 +175,7 @@ model.compile( loss="sparse_categorical_crossentropy", optimizer="adam", metrics
 - optimizer เป็น Adam
 - metrics เป็น accuracy
 
+### Train the model
 ทำการ run model ด้วย x_train และ y_train และมีการกำหนดให้เลือก weight ที่ให้ค่า accuracy มากสุดไปใช้ใน model สุดท้าย โดยใช้ callbacks
 ```
 from datetime import datetime
@@ -292,7 +188,7 @@ from keras import callbacks
 
 checkpointer = tf.keras.callbacks.ModelCheckpoint(filepath="weights.hdf5", monitor = 'val_acc', verbose=1, save_best_only=True)
 
-history = model.fit( x_train , y_train, batch_size=5, epochs=10, verbose=1, validation_split=0.3, callbacks=[checkpointer] )
+history = model.fit( x_train , y_train, batch_size=10, epochs=10, verbose=1, validation_split=0.3, callbacks=[checkpointer] )
 model.load_weights('weights.hdf5')
 
 end_time = datetime.now()
@@ -303,6 +199,7 @@ print('Duration: {}'.format(end_time - start_time))
 
 จะเห็นว่าในการ train ครั้งนี้ค่าที่ดีที่สุดของ accuracy อยู่ที่ 0.9227 และของ validation accuracy อยู่ที่ 0.8201 อยู่ใน epoch ที่ 3 โดยเราจะใช้โมเดลใน epoch อันนี้ ในการไปใช้กับ test set ต่อไป  
 
+### Learning curves
 กราฟ accuracy และ กราฟ loss
 
 ```
@@ -334,7 +231,7 @@ plt.show()
 ![image](https://user-images.githubusercontent.com/85028821/195817457-32f46fab-307a-47ea-a65f-15be86a4d69a.png)
 
 
-### Evaluate on test set 
+### Evaluate on test set
 ```
 # Evaluate the trained model on the test set
 start_time = datetime.now()
@@ -353,28 +250,21 @@ print('Duration: {}'.format(end_time - start_time))
 ทำการเอา set seed ในการ train ออก แล้วทำการสร้าง model และ run train กับ test ใหม่ เพื่อหาค่าเฉลี่ยของ accuracy บน test set โดยทำทั้งหมด 3 รอบ
 ```
 # create model
-img_w,img_h = 224,224
-vgg_extractor = tf.keras.applications.vgg16.VGG16(weights = "imagenet", include_top=False, input_shape = (img_w, img_h, 3))
+vgg_extractor = tf.keras.applications.vgg16.VGG16(weights = "imagenet", include_top=True)
+vgg_extractor= Model(inputs=vgg_extractor.input, outputs=vgg_extractor.layers[-2].output)
 vgg_extractor.trainable = False
+
+# add classifier
 x = vgg_extractor.output
-x = tf.keras.layers.Flatten()(x)
-x = tf.keras.layers.Dense(4096, activation="relu")(x)
-x = tf.keras.layers.Dense(4096, activation="relu")(x)
 new_outputs = tf.keras.layers.Dense(4, activation="softmax")(x)
 model = tf.keras.models.Model(inputs=vgg_extractor.inputs, outputs=new_outputs)
 
 #train model without seed
 model.compile( loss="sparse_categorical_crossentropy", optimizer="adam", metrics=["acc"] )
 
-start_time = datetime.now()
-
 checkpointer = tf.keras.callbacks.ModelCheckpoint(filepath="weights.hdf5", monitor = 'val_acc', verbose=1, save_best_only=True)
-
-history = model.fit( x_train , y_train, batch_size=5, epochs=10, verbose=1, validation_split=0.3, callbacks=[checkpointer] )
+history = model.fit( x_train , y_train, batch_size=10, epochs=10, verbose=1, validation_split=0.3, callbacks=[checkpointer] )
 model.load_weights('weights.hdf5')
-
-end_time = datetime.now()
-print('Duration: {}'.format(end_time - start_time))
 
 #Evaluate on test set without seed
 start_time = datetime.now()
