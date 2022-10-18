@@ -91,12 +91,6 @@ df_test_count.plot.bar()
 ```
 ![image](https://user-images.githubusercontent.com/85028821/195630585-02cdf80d-7dae-4b95-90f7-c1cc4c2ccb87.png)
 
-จากกราฟแสดงให้เห็นปริมาณข้อมูลของแต่ละclass ของ test dataset ว่ามีการกระจายตัวที่ใกล้เคียงกัน เช่นกัน
-
-```
-https://medium.com/geekculture/eda-for-image-classification-dcada9f2567a
-```
-
 ### Visualize the images in x_train
 ```
 plt.figure(figsize=(10,5))
