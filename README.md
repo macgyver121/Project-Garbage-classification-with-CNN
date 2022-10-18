@@ -284,13 +284,15 @@ vgg_extractor = tf.keras.applications.vgg16.VGG16(weights = "imagenet", include_
 vgg_extractor.trainable = False
 ```
 
-### Un-freeze the top layers of the model
+### 1.2.2 Un-freeze the top layers of the model
+ทำการ un-freeze 2 layer สุดท้ายของ feature extractor
 ```
 vgg_extractor.layers[-2].trainable = True
 vgg_extractor.layers[-1].trainable = True
 ```
 
 ### 1.2.2 Add a classification head
+ทำการเพิ่มในส่วนของ classifier ต่อท้ายกับส่วนของ feature extractor
 ```
 x = vgg_extractor.output
 
