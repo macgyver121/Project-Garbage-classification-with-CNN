@@ -641,9 +641,9 @@ print('Duration: {}'.format(end_time - start_time))
 ![tune-train-epoch](https://user-images.githubusercontent.com/97573140/196420774-cc0dd6f4-0d47-48fb-9d9d-70ac202e0fbe.PNG)
 
 ### Learning curves
-
-# Summarize history for accuracy
 ```
+#Summarize history for accuracy
+
 plt.figure(figsize=(15,5))
 plt.plot(history.history['acc'])
 plt.plot(history.history['val_acc'])
@@ -683,6 +683,7 @@ print('Duration: {}'.format(end_time - start_time))
 ```
 
 ![tune-acc](https://user-images.githubusercontent.com/97573140/196420395-c65c3971-966e-49cc-8609-4edcafe66ff4.PNG)
+
 ค่า accuracy เมื่อทำการ evaluate บน test set ได้ค่าอยู่ที่ 0.56333
 
 ### Evaluate on test set without seed
