@@ -113,13 +113,13 @@ vgg_extractor = tf.keras.applications.vgg16.VGG16(weights = "imagenet", include_
 from keras.models import Model
 vgg_extractor= Model(inputs=vgg_extractor.input, outputs=vgg_extractor.layers[-2].output)
 ```
-### Freeze the convolutional base
+### 1.1.1 Freeze the convolutional base
 ทำการ freeze layer ทั้งหมดใน feature extractor
 ```
 vgg_extractor.trainable = False
 ```
 
-### Add a classification head
+### 1.1.2 Add a classification head
 ทำการเพิ่มส่วนของ classifier ตาม model ของ VGG16 ใน Keras โดย layer สุดท้ายจะมีการจำแนกข้อมูลเป็น 4 class เนื่องจาก เราต้องการทำนายรูปภาพขยะออกเป็น 4 ประเภท
 
 ```
@@ -138,7 +138,7 @@ Model flow
 See in : https://user-images.githubusercontent.com/85028821/196149170-41bc46ce-3899-48ab-a2a1-2de71ea1c408.png)
 
 
-### Preprocessing input
+### 1.1.3 Preprocessing input
 ทำการเอาข้อมูลไปเข้า preprocessing ก่อนนำไปใช้ใน model
 ```
 np.random.seed(1234)
@@ -160,7 +160,7 @@ test_data = data_gen.flow_from_directory(data_dir,
 x_train, y_train = train_data.next()
 x_test, y_test = test_data.next()
 ```
-### Compile the model
+### 1.1.4 Compile the model
 ทำการ compile กำหนด Arguments ต่างๆของ model 
 ```
 model.compile( loss="sparse_categorical_crossentropy", optimizer="adam", metrics=["acc"] )
@@ -169,7 +169,7 @@ model.compile( loss="sparse_categorical_crossentropy", optimizer="adam", metrics
 - optimizer เป็น Adam
 - metrics เป็น accuracy
 
-### Train the model
+### 1.1.5 Train the model
 ทำการ run model ด้วย x_train และ y_train และมีการกำหนดให้เลือก weight ที่ให้ค่า accuracy มากสุดไปใช้ใน model สุดท้าย โดยใช้ callbacks
 ```
 from datetime import datetime
@@ -193,7 +193,7 @@ print('Duration: {}'.format(end_time - start_time))
 
 จะเห็นว่าในการ train ครั้งนี้ค่าที่ดีที่สุดของ accuracy อยู่ที่ 0.9227 และของ validation accuracy อยู่ที่ 0.8201 อยู่ใน epoch ที่ 3 โดยเราจะใช้โมเดลใน epoch อันนี้ ในการไปใช้กับ test set ต่อไป  
 
-### Learning curves
+### 1.1.6 Learning curves
 กราฟ accuracy และ กราฟ loss
 
 ```
@@ -225,7 +225,7 @@ plt.show()
 ![image](https://user-images.githubusercontent.com/85028821/195817457-32f46fab-307a-47ea-a65f-15be86a4d69a.png)
 
 
-### Evaluate on test set
+### 1.1.7 Evaluate on test set
 ```
 # Evaluate the trained model on the test set
 start_time = datetime.now()
@@ -240,7 +240,7 @@ print('Duration: {}'.format(end_time - start_time))
 
 ค่า accuracy เมื่อทำการ evaluate บน test set ได้ค่าอยู่ที่ 0.6208 
 
-### Evaluate on test set without seed
+### 1.1.8 Evaluate on test set without seed
 ทำการเอา set seed ในการ train ออก แล้วทำการสร้าง model และ run train กับ test ใหม่ เพื่อหาค่าเฉลี่ยของ accuracy บน test set โดยทำทั้งหมด 3 รอบ
 ```
 # create model
@@ -280,7 +280,7 @@ Duration: 0:00:01.460710
 ค่าเฉลี่ย accuracy 3 รอบ ของ test set = 0.6232 
 
 ## 1.2 Tuning model (VGG-16)
-### Create feature extractor
+### 1.2.1 Create feature extractor
 ```
 img_w,img_h = 224,224
 vgg_extractor = tf.keras.applications.vgg16.VGG16(weights = "imagenet", include_top=False, input_shape = (img_w, img_h, 3))
@@ -293,7 +293,7 @@ vgg_extractor.layers[-2].trainable = True
 vgg_extractor.layers[-1].trainable = True
 ```
 
-### Add a classification head
+### 1.2.2 Add a classification head
 ```
 x = vgg_extractor.output
 
@@ -312,7 +312,7 @@ Model flow
 
 See in : https://user-images.githubusercontent.com/85028821/196160471-87944299-63d6-4516-8128-7c38e8c4a2a0.png
 
-### Compile the model
+### 1.2.3 Compile the model
 ทำการ compile กำหนด Arguments ต่างๆของ model 
 ```
 alpha = 0.001
@@ -322,7 +322,7 @@ model.compile( loss="sparse_categorical_crossentropy", optimizer=tf.keras.optimi
 - optimizer เป็น Adamax กำหนดค่า learning rate เป็น 0.01
 - metrics เป็น accuracy
 
-### Train the model
+### 1.2.4 Train the model
 ทำการ run model ด้วย x_train และ y_train และมีการกำหนดให้เลือก weight ที่ให้ค่า accuracy มากสุดไปใช้ใน model สุดท้าย โดยใช้ callbacks
 ```
 from datetime import datetime
@@ -345,13 +345,13 @@ https://user-images.githubusercontent.com/85028821/196152611-4cabb8af-7476-47eb-
 
 จะเห็นว่าในการ train ครั้งนี้ค่าที่ดีที่สุดของ accuracy อยู่ที่ 0.9909 และของ validation accuracy อยู่ที่ 0.8360 อยู่ใน epoch ที่ 4 โดยเราจะใช้โมเดลใน epoch อันนี้ ในการไปใช้กับ test set ต่อไป  
 
-### Learning curves
+### 1.2.5 Learning curves
 กราฟ accuracy และ กราฟ loss
 
 ![image](https://user-images.githubusercontent.com/85028821/196158352-1b3acc69-ad29-463e-bc35-dc478a985d5f.png)
 ![image](https://user-images.githubusercontent.com/85028821/196158403-c6cfdf60-0eb9-4a30-be3f-1b5b20412b4e.png)
 
-### Evaluate on test set
+### 1.2.6 Evaluate on test set
 ```
 # Evaluate the trained model on the test set
 start_time = datetime.now()
@@ -366,7 +366,7 @@ print('Duration: {}'.format(end_time - start_time))
 
 ค่า accuracy เมื่อทำการ evaluate บน test set ได้ค่าอยู่ที่ 0.6914 
 
-### Evaluate on test set without seed
+### 1.2.7 Evaluate on test set without seed
 ทำการเอา set seed ในการ train ออก แล้วทำการสร้าง model และ run train กับ test ใหม่ เพื่อหาค่าเฉลี่ยของ accuracy บน test set โดยทำทั้งหมด 3 รอบ
 ```
 # create model
