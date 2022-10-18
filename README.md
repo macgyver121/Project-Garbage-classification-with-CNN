@@ -424,7 +424,7 @@ print('Duration: {}'.format(end_time - start_time))
 
 
 # 3. MobileNet
-## 1.1 Original Pre-trained model (MobileNet)
+## 3.1 Original Pre-trained model (MobileNet)
 ### Create the base model from the pre-trained convnets
 ทำการโหลด Imagenet MobileNet model มาใช้ โดยเอาในส่วนของ classifier มาด้วย และลบ layer ที่แบ่งข้อมูลออกเป็น 1000 class
 ```
@@ -458,7 +458,7 @@ model.summary()
 
 Model flow
 
-See in : https://user-images.githubusercontent.com/85028821/196149170-41bc46ce-3899-48ab-a2a1-2de71ea1c408.png)
+See in : https://user-images.githubusercontent.com/97573140/196418863-035da0d4-ed5b-49b5-b1bc-28a323c43603.png
 
 
 ### Preprocessing input
