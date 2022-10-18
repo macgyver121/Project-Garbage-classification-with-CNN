@@ -286,20 +286,24 @@ Duration: 0:00:01.460710
 ค่าเฉลี่ย accuracy 3 รอบ ของ test set = 0.6232 
 
 ##  Tuning model (VGG-16)
-### 1.1 Prepare for transfer learning
+### Create feature extractor
 ```
-img_w,img_h = 224,224 
+img_w,img_h = 224,224
 vgg_extractor = tf.keras.applications.vgg16.VGG16(weights = "imagenet", include_top=False, input_shape = (img_w, img_h, 3))
-
-# freeze
 vgg_extractor.trainable = False
+```
 
-# tuning last 2 layers
-vgg_extractor.layers[-1].trainable = True
+### Un-freeze the top layers of the model
+```
 vgg_extractor.layers[-2].trainable = True
+vgg_extractor.layers[-1].trainable = True
+```
 
-# add classification
+### Add a classification head
+```
 x = vgg_extractor.output
+
+# Add our custom layer(s) to the end of the existing model 
 x = tf.keras.layers.Flatten()(x)
 x = tf.keras.layers.Dense(4096, activation="relu")(x)
 x = tf.keras.layers.Dense(4096, activation="relu")(x)
@@ -307,34 +311,13 @@ new_outputs = tf.keras.layers.Dense(4, activation="softmax")(x)
 
 # Construct the main model 
 model = tf.keras.models.Model(inputs=vgg_extractor.inputs, outputs=new_outputs)
+model.summary()
 ```
-Plot model
+Model flow
 
 ![plot2](https://user-images.githubusercontent.com/85028821/196160471-87944299-63d6-4516-8128-7c38e8c4a2a0.png)
 
-### 1.2 Train the model with transfer learning and set seed
-ทำการเอาข้อมูลไปเข้า preprocessing ก่อนนำไปใช้ใน model
-```
-np.random.seed(1234)
-tf.random.set_seed(5678)
-
-# Defining data generator withour Data Augmentation
-data_gen = ImageDataGenerator(preprocessing_function=tf.keras.applications.vgg16.preprocess_input, rescale = 1/255., validation_split = 0.3)
-
-train_data = data_gen.flow_from_directory(data_dir, 
-                                          target_size = (224, 224), 
-                                          batch_size = 700,
-                                          subset = 'training',
-                                          class_mode = 'binary')
-test_data = data_gen.flow_from_directory(data_dir, 
-                                        target_size = (224, 224), 
-                                        batch_size = 300,
-                                        subset = 'validation',
-                                        class_mode = 'binary')
-x_train, y_train = train_data.next()
-x_test, y_test = test_data.next()
-```
-
+### Compile the model
 ทำการ compile กำหนด Arguments ต่างๆของ model 
 ```
 alpha = 0.001
@@ -344,6 +327,7 @@ model.compile( loss="sparse_categorical_crossentropy", optimizer=tf.keras.optimi
 - optimizer เป็น Adamax กำหนดค่า learning rate เป็น 0.01
 - metrics เป็น accuracy
 
+### Train the model
 ทำการ run model ด้วย x_train และ y_train และมีการกำหนดให้เลือก weight ที่ให้ค่า accuracy มากสุดไปใช้ใน model สุดท้าย โดยใช้ callbacks
 ```
 from datetime import datetime
@@ -366,12 +350,13 @@ print('Duration: {}'.format(end_time - start_time))
 
 จะเห็นว่าในการ train ครั้งนี้ค่าที่ดีที่สุดของ accuracy อยู่ที่ 0.9909 และของ validation accuracy อยู่ที่ 0.8360 อยู่ใน epoch ที่ 4 โดยเราจะใช้โมเดลใน epoch อันนี้ ในการไปใช้กับ test set ต่อไป  
 
+### Learning curves
 กราฟ accuracy และ กราฟ loss
 
 ![image](https://user-images.githubusercontent.com/85028821/196158352-1b3acc69-ad29-463e-bc35-dc478a985d5f.png)
 ![image](https://user-images.githubusercontent.com/85028821/196158403-c6cfdf60-0eb9-4a30-be3f-1b5b20412b4e.png)
 
-### 1.3 Evaluate on test set 
+### Evaluate on test set
 ```
 # Evaluate the trained model on the test set
 start_time = datetime.now()
@@ -386,10 +371,10 @@ print('Duration: {}'.format(end_time - start_time))
 
 ค่า accuracy เมื่อทำการ evaluate บน test set ได้ค่าอยู่ที่ 0.6914 
 
-### 1.4 Evaluate on test set without seed
+### Evaluate on test set without seed
 ทำการเอา set seed ในการ train ออก แล้วทำการสร้าง model และ run train กับ test ใหม่ เพื่อหาค่าเฉลี่ยของ accuracy บน test set โดยทำทั้งหมด 3 รอบ
 ```
- create model
+# create model
 img_w,img_h = 224,224 
 vgg_extractor = tf.keras.applications.vgg16.VGG16(weights = "imagenet", include_top=False, input_shape = (img_w, img_h, 3))
 vgg_extractor.trainable = False
