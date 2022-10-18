@@ -418,13 +418,290 @@ print('Duration: {}'.format(end_time - start_time))
 2.
 3.
 
-# Resnet50
+# 2. Resnet50
 ## Original Pre-trained model (Resnet50)
 ## Tuning model (Resnet50)
 
-# MobileNet
-## Original Pre-trained model (MobileNet)
-## Tuning model (MobileNet)
+
+# 3. MobileNet
+## 1.1 Original Pre-trained model (MobileNet)
+### Create the base model from the pre-trained convnets
+ทำการโหลด Imagenet MobileNet model มาใช้ โดยเอาในส่วนของ classifier มาด้วย และลบ layer ที่แบ่งข้อมูลออกเป็น 1000 class
+```
+vgg_extractor = tf.keras.applications.mobilenet.MobileNet(weights = "imagenet", include_top=False)
+
+# delete last layer
+from keras.models import Model
+vgg_extractor= Model(inputs=vgg_extractor.input, outputs=vgg_extractor.layers[-2].output)
+vgg_extractor.summary()
+```
+
+### Freeze the convolutional base
+```
+vgg_extractor.trainable = False
+
+for i,layer in enumerate(vgg_extractor.layers):  
+    print( f"Layer {i}: name = {layer.name} , trainable = {layer.trainable}" )```
+```
+
+### Add a classification head
+```
+x = vgg_extractor.output
+
+# Add our custom layer(s) to the end of the existing model 
+new_outputs = tf.keras.layers.Dense(4, activation="softmax")(x)
+
+# Construct the main model 
+model = tf.keras.models.Model(inputs=vgg_extractor.inputs, outputs=new_outputs)
+model.summary()
+```
+
+Model flow
+
+See in : https://user-images.githubusercontent.com/85028821/196149170-41bc46ce-3899-48ab-a2a1-2de71ea1c408.png)
+
+
+### Preprocessing input
+```
+np.random.seed(1234)
+tf.random.set_seed(5678)
+
+# Defining data generator withour Data Augmentation
+data_gen = ImageDataGenerator(preprocessing_function=tf.keras.applications.mobilenet.preprocess_input, rescale = 1/255., validation_split = 0.3)
+
+train_data = data_gen.flow_from_directory(data_dir, 
+                                          target_size = (224, 224), 
+                                          batch_size = 700,
+                                          subset = 'training',
+                                          class_mode = 'binary')
+test_data = data_gen.flow_from_directory(data_dir, 
+                                        target_size = (224, 224), 
+                                        batch_size = 300,
+                                        subset = 'validation',
+                                        class_mode = 'binary')
+x_train, y_train = train_data.next()
+x_test, y_test = test_data.next()
+```
+### Compile the model
+```
+model.compile( loss="sparse_categorical_crossentropy", optimizer="adam", metrics=["acc"] )
+```
+
+### Train the model
+```
+from datetime import datetime
+start_time = datetime.now()
+
+np.random.seed(1234)
+tf.random.set_seed(5678)
+
+from keras import callbacks
+
+checkpointer = tf.keras.callbacks.ModelCheckpoint(filepath="weights.hdf5", monitor = 'val_acc', verbose=1, save_best_only=True)
+
+history = model.fit( x_train , y_train, batch_size=10, epochs=30, verbose=1, validation_split=0.3, callbacks=[checkpointer] )
+model.load_weights('weights.hdf5')
+
+end_time = datetime.now()
+print('Duration: {}'.format(end_time - start_time))
+```
+ขาดรูปepoch
+จะเห็นว่าในการ train ครั้งนี้ค่าที่ดีที่สุดของ accuracy อยู่ที่ 0.9227 และของ validation accuracy อยู่ที่ 0.8201 อยู่ใน epoch ที่ 3 โดยเราจะใช้โมเดลใน epoch อันนี้ ในการไปใช้กับ test set ต่อไป  
+
+### Learning curves
+กราฟ accuracy และ กราฟ loss
+
+```
+# Summarize history for accuracy
+plt.figure(figsize=(15,5))
+plt.plot(history.history['acc'])
+plt.plot(history.history['val_acc'])
+plt.title('Train accuracy')
+plt.ylabel('accuracy')
+plt.xlabel('epoch')
+plt.legend(['train', 'val'], loc='upper left')
+plt.grid()
+plt.show()
+
+# Summarize history for loss
+plt.figure(figsize=(15,5))
+plt.plot(history.history['loss'])
+plt.plot(history.history['val_loss'])
+plt.title('Train loss')
+plt.ylabel('loss')
+plt.xlabel('epoch')
+plt.legend(['train', 'val'], loc='upper right')
+plt.grid()
+plt.show()
+```
+ขาดรูปกราฟ
+
+### Evaluate on test set
+```
+# Evaluate the trained model on the test set
+start_time = datetime.now()
+
+results = model.evaluate(x_test, y_test, batch_size=32)
+print( f"{model.metrics_names}: {results}" )
+
+end_time = datetime.now()
+print('Duration: {}'.format(end_time - start_time))
+```
+ขาดรูปผลการรัน
+ค่า accuracy เมื่อทำการ evaluate บน test set ได้ค่าอยู่ที่ 0.6208 
+
+### Evaluate on test set without seed
+```
+# create model
+vgg_extractor = tf.keras.applications.mobilenet.MobileNet(weights = "imagenet", include_top=True)
+vgg_extractor= Model(inputs=vgg_extractor.input, outputs=vgg_extractor.layers[-2].output)
+vgg_extractor.trainable = False
+
+# add classifier
+x = vgg_extractor.output
+new_outputs = tf.keras.layers.Dense(4, activation="softmax")(x)
+model = tf.keras.models.Model(inputs=vgg_extractor.inputs, outputs=new_outputs)
+
+#train model without seed
+model.compile( loss="sparse_categorical_crossentropy", optimizer="adam", metrics=["acc"] )
+
+checkpointer = tf.keras.callbacks.ModelCheckpoint(filepath="weights.hdf5", monitor = 'val_acc', verbose=1, save_best_only=True)
+history = model.fit( x_train , y_train, batch_size=10, epochs=50, verbose=1, validation_split=0.3, callbacks=[checkpointer] )
+model.load_weights('weights.hdf5')
+
+#Evaluate on test set without seed
+start_time = datetime.now()
+
+results = model.evaluate(x_test, y_test, batch_size=32)
+print( f"{model.metrics_names}: {results}" )
+
+end_time = datetime.now()
+print('Duration: {}'.format(end_time - start_time))
+```
+ผลลัพท์ accuracy บน test set 3 รอบคือ
+1. 
+2. 
+3. 
+ค่าเฉลี่ย accuracy 3 รอบ ของ test set = 
+
+## 1.2 Tuning model (MobileNet)
+### Create feature extractor
+```
+img_w,img_h = 224,224
+vgg_extractor = tf.keras.applications.mobilenet.MobileNet(weights = "imagenet", include_top=True, input_shape = (img_w, img_h, 3))
+
+vgg_extractor.summary()
+```
+### Add a classification head
+```
+x = vgg_extractor.layers[-5].output
+
+# Add our custom layer(s) to the end of the existing model 
+#x = tf.keras.layers.Flatten()(x)
+x = tf.keras.layers.Dense(4096, activation="relu")(x)
+x = tf.keras.layers.Dense(512, activation="relu")(x)
+x = tf.keras.layers.Dropout(0.5)(x)
+new_outputs = tf.keras.layers.Dense(4, activation="softmax")(x)
+
+# Construct the main model 
+model = tf.keras.models.Model(inputs=vgg_extractor.inputs, outputs=new_outputs)
+model.summary()
+```
+
+Model flow
+ขาดรูป
+
+### Compile the model
+```
+alpha = 0.001
+model.compile( loss="sparse_categorical_crossentropy", optimizer=tf.keras.optimizers.Adamax(learning_rate = alpha) , metrics=["acc"] )
+```
+
+### Train the model
+```
+from datetime import datetime
+start_time = datetime.now()
+
+np.random.seed(1234)
+tf.random.set_seed(5678)
+
+from keras import callbacks
+
+checkpointer = tf.keras.callbacks.ModelCheckpoint(filepath="weights.hdf5", monitor = 'val_acc', verbose=1, save_best_only=True)
+
+history = model.fit( x_train , y_train, batch_size=10, epochs=30, verbose=1, validation_split=0.3, callbacks=[checkpointer] )
+model.load_weights('weights.hdf5')
+
+end_time = datetime.now()
+print('Duration: {}'.format(end_time - start_time))
+```
+ขาดรูปepoch
+
+### Learning curves
+กราฟ accuracy และ กราฟ loss
+ขาดรูป
+
+### Evaluate on test set
+```
+# Evaluate the trained model on the test set
+start_time = datetime.now()
+
+results = model.evaluate(x_test, y_test, batch_size=32)
+print( f"{model.metrics_names}: {results}" )
+
+end_time = datetime.now()
+print('Duration: {}'.format(end_time - start_time))
+```
+ขาดรูป
+ค่า accuracy เมื่อทำการ evaluate บน test set ได้ค่าอยู่ที่  
+
+### Evaluate on test set without seed
+```
+# create model
+img_w,img_h = 224,224 
+vgg_extractor = tf.keras.applications.mobilenet.MobileNet(weights = "imagenet", include_top=True, input_shape = (img_w, img_h, 3))
+#vgg_extractor.trainable = False
+#vgg_extractor.layers[-2].trainable = True
+#vgg_extractor.layers[-1].trainable = True
+
+x = vgg_extractor.layers[-5].output
+
+x = tf.keras.layers.Flatten()(x)
+x = tf.keras.layers.Dense(4096, activation="relu")(x)
+x = tf.keras.layers.Dense(512, activation="relu")(x)
+x = tf.keras.layers.Dropout(0.5)(x)
+new_outputs = tf.keras.layers.Dense(4, activation="softmax")(x)
+
+model = tf.keras.models.Model(inputs=vgg_extractor.inputs, outputs=new_outputs)
+
+#train model without seed
+alpha = 0.001
+model.compile( loss="sparse_categorical_crossentropy", optimizer=tf.keras.optimizers.Adamax(learning_rate = alpha) , metrics=["acc"] )
+
+start_time = datetime.now()
+checkpointer = tf.keras.callbacks.ModelCheckpoint(filepath="weights.hdf5", monitor = 'val_acc', verbose=1, save_best_only=True)
+
+history = model.fit( x_train , y_train, batch_size=10, epochs=30, verbose=1, validation_split=0.3, callbacks=[checkpointer] )
+model.load_weights('weights.hdf5')
+
+end_time = datetime.now()
+print('Duration: {}'.format(end_time - start_time))
+
+#Evaluate on test set without seed
+start_time = datetime.now()
+
+results = model.evaluate(x_test, y_test, batch_size=32)
+print( f"{model.metrics_names}: {results}" )
+
+end_time = datetime.now()
+print('Duration: {}'.format(end_time - start_time))
+```
+
+ผลลัพท์ accuracy บน test set 3 รอบคือ
+1. 0.6133
+2. 0.5400
+3. 0.5733
+ค่าเฉลี่ย accuracy 3 รอบ ของ test set  = 0.57553
 
 # EfficiantNetV2
 ## Original Pre-trained model (MobileNet)
