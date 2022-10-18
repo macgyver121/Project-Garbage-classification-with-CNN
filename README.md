@@ -139,7 +139,7 @@ new_outputs = tf.keras.layers.Dense(4, activation="softmax")(x)
 model = tf.keras.models.Model(inputs=vgg_extractor.inputs, outputs=new_outputs)
 ```
 
-Plot Model
+Model flow
 
 See in : https://user-images.githubusercontent.com/85028821/196149170-41bc46ce-3899-48ab-a2a1-2de71ea1c408.png)
 
@@ -313,9 +313,10 @@ new_outputs = tf.keras.layers.Dense(4, activation="softmax")(x)
 model = tf.keras.models.Model(inputs=vgg_extractor.inputs, outputs=new_outputs)
 model.summary()
 ```
+
 Model flow
 
-![plot2](https://user-images.githubusercontent.com/85028821/196160471-87944299-63d6-4516-8128-7c38e8c4a2a0.png)
+See in : https://user-images.githubusercontent.com/85028821/196160471-87944299-63d6-4516-8128-7c38e8c4a2a0.png
 
 ### Compile the model
 ทำการ compile กำหนด Arguments ต่างๆของ model 
@@ -346,7 +347,7 @@ model.load_weights('weights.hdf5')
 end_time = datetime.now()
 print('Duration: {}'.format(end_time - start_time))
 ```
-![image](https://user-images.githubusercontent.com/85028821/196152611-4cabb8af-7476-47eb-a199-44c7f4af32fe.png)
+https://user-images.githubusercontent.com/85028821/196152611-4cabb8af-7476-47eb-a199-44c7f4af32fe.png
 
 จะเห็นว่าในการ train ครั้งนี้ค่าที่ดีที่สุดของ accuracy อยู่ที่ 0.9909 และของ validation accuracy อยู่ที่ 0.8360 อยู่ใน epoch ที่ 4 โดยเราจะใช้โมเดลใน epoch อันนี้ ในการไปใช้กับ test set ต่อไป  
 
