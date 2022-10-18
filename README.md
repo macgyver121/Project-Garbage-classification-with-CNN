@@ -270,12 +270,9 @@ end_time = datetime.now()
 print('Duration: {}'.format(end_time - start_time))
 ```
 ผลลัพท์ accuracy บน test set 3 รอบคือ
-1. ['loss', 'acc']: [1.6552209854125977, 0.6356877088546753]
-Duration: 0:00:01.581440
-2. ['loss', 'acc']: [2.407459020614624, 0.6468401551246643]
-Duration: 0:00:01.448805
-3. ['loss', 'acc']: [1.997439980506897, 0.5873606204986572]
-Duration: 0:00:01.460710
+1. accuracy = 0.6356
+2. accuracy = 0.6468
+3. accuracy = 0.5873
 
 ค่าเฉลี่ย accuracy 3 รอบ ของ test set = 0.6232 
 
@@ -408,9 +405,11 @@ print('Duration: {}'.format(end_time - start_time))
 ```
 
 ผลลัพท์ accuracy บน test set 3 รอบคือ
-1.
-2.
-3.
+1. accuracy = 0.7286
+2. accuracy = 0.7323
+3. accuracy = 0.7026
+
+ค่าเฉลี่ย accuracy 3 รอบ ของ test set = 0.7212
 
 # 2. Resnet50
 ## Original Pre-trained model (Resnet50)
