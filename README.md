@@ -409,9 +409,9 @@ print('Duration: {}'.format(end_time - start_time))
 ผลลัพท์ accuracy บน test set 3 รอบคือ
 1. accuracy = 0.7286
 2. accuracy = 0.7323
-3. accuracy = 0.7026
+3. accuracy = 0.6877
 
-ค่าเฉลี่ย accuracy 3 รอบ ของ test set = 0.7212
+ค่าเฉลี่ย accuracy 3 รอบ ของ test set = 0.7162
 
 # 2. Resnet50
 ## Original Pre-trained model (Resnet50)
