@@ -100,7 +100,7 @@ for i in range(0,10):
     plt.tight_layout()       
     plt.show()
 ```
-![image](https://user-images.githubusercontent.com/85028821/196135569-abdf2d78-f8a6-42e5-9e6c-f2eb927c5d40.png)
+![image](https://user-images.githubusercontent.com/85028821/196135569-abdf2d78-f8a6-42e5-9e6c-f2eb927c5d40.png
 
 # 1. VGG-16
 ## 1.1 Original Pre-trained model (VGG-16)
