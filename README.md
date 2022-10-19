@@ -1064,12 +1064,13 @@ effnet_v2 = tf.keras.applications.efficientnet_v2.EfficientNetV2B1(
     pooling=None,
     classes=1000,
     classifier_activation='softmax',
-    include_preprocessing=True
-)
-
+    include_preprocessing=True)
+```
 # delete last layer
+```
 from keras.models import Model
-effnet_v2= Model(inputs=effnet_v2.input, outputs=effnet_v2.layers[-2].output)```
+effnet_v2= Model(inputs=effnet_v2.input, outputs=effnet_v2.layers[-2].output)
+```
 ### 1.1.2 Freeze the convolutional base
 ทำการ freeze layer ทั้งหมดใน feature extractor
 ```
@@ -1078,15 +1079,15 @@ effnet_v2.trainable = False
 
 ### 1.1.3 Add a classification head
 ทำการเพิ่มส่วนของ classifier ตาม model ของ EfficientNetV2B1 ใน Keras โดย layer สุดท้ายจะมีการจำแนกข้อมูลเป็น 4 class เนื่องจาก เราต้องการทำนายรูปภาพขยะออกเป็น 4 ประเภท
-
 ```
 x = effnet_v2.output
-
+```
 # Add our custom layer(s) to the end of the existing model 
-
+```
 new_outputs = tf.keras.layers.Dense(4, activation="softmax")(x)
-
+```
 # Construct the main model 
+```
 model = tf.keras.models.Model(inputs= effnet_v2.inputs, outputs=new_outputs)
 ```
 
