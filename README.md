@@ -502,8 +502,8 @@ model.load_weights('weights.hdf5')
 end_time = datetime.now()
 print('Duration: {}'.format(end_time - start_time))
 ```
+<img width="662" alt="trainor" src="https://user-images.githubusercontent.com/80901294/196683018-b529e871-946b-4116-9b47-1309361aab26.png">
 
-![image](https://user-images.githubusercontent.com/85028821/195815557-b07e583a-1857-42c8-a88f-0f7768d12907.png)
 
 จะเห็นว่าในการ train ครั้งนี้ค่าที่ดีที่สุดของ accuracy อยู่ที่ 0.5915 และของ validation accuracy อยู่ที่ 0.54098อยู่ใน epoch ที่ 26 โดยเราจะใช้โมเดลใน epoch อันนี้ ในการไปใช้กับ test set ต่อไป  
 
@@ -533,10 +533,8 @@ plt.legend(['train', 'val'], loc='upper right')
 plt.grid()
 plt.show()
 ```
+![ผลtrain](https://user-images.githubusercontent.com/80901294/196682961-a2ce57e5-8c08-465f-97aa-24b622474de6.png)
 
-![image](https://user-images.githubusercontent.com/85028821/195815934-5cd5277c-3474-4e4d-a75f-3a452db53365.png)
-
-![image](https://user-images.githubusercontent.com/85028821/195817457-32f46fab-307a-47ea-a65f-15be86a4d69a.png)
 
 
 ### Evaluate on test set
@@ -550,7 +548,8 @@ print( f"{model.metrics_names}: {results}" )
 end_time = datetime.now()
 print('Duration: {}'.format(end_time - start_time))
 ```
-![image](https://user-images.githubusercontent.com/85028821/196142277-c9d976e4-ca05-4d28-9276-c8b36a39be79.png)
+<img width="662" alt="test9or" src="https://user-images.githubusercontent.com/80901294/196683078-b374ec42-3d51-4143-a0e7-70fc3931b774.png">
+
 
 ค่า accuracy เมื่อทำการ evaluate บน test set ได้ค่าอยู่ที่ 0.46899 
 
@@ -622,7 +621,7 @@ model.summary()
 
 Model flow
 
-See in : https://user-images.githubusercontent.com/85028821/196160471-87944299-63d6-4516-8128-7c38e8c4a2a0.png
+See in :https://user-images.githubusercontent.com/80901294/196683845-4eafa845-3d58-4167-ab87-dba185f255e1.png
 
 ### Compile the model
 ทำการ compile กำหนด Arguments ต่างๆของ model 
@@ -653,15 +652,13 @@ model.load_weights('weights.hdf5')
 end_time = datetime.now()
 print('Duration: {}'.format(end_time - start_time))
 ```
-https://user-images.githubusercontent.com/85028821/196152611-4cabb8af-7476-47eb-a199-44c7f4af32fe.png
+<img width="662" alt="trainor" src="https://user-images.githubusercontent.com/80901294/196683416-84083b16-9c0e-40ad-aa2a-f3046879b242.png">
 
 จะเห็นว่าในการ train ครั้งนี้ค่าที่ดีที่สุดของ accuracy อยู่ที่ 0.5117 และของ validation accuracy อยู่ที่ 0.54645 อยู่ใน epoch ที่ 23 โดยเราจะใช้โมเดลใน epoch อันนี้ ในการไปใช้กับ test set ต่อไป  
 
 ### Learning curves
 กราฟ accuracy และ กราฟ loss
-
-![image](https://user-images.githubusercontent.com/85028821/196158352-1b3acc69-ad29-463e-bc35-dc478a985d5f.png)
-![image](https://user-images.githubusercontent.com/85028821/196158403-c6cfdf60-0eb9-4a30-be3f-1b5b20412b4e.png)
+![ผลtrain](https://user-images.githubusercontent.com/80901294/196683489-f0879f5a-549e-403e-ae81-8a1cdd2bc20a.png)
 
 ### Evaluate on test set
 ```
@@ -674,7 +671,8 @@ print( f"{model.metrics_names}: {results}" )
 end_time = datetime.now()
 print('Duration: {}'.format(end_time - start_time))
 ```
-![image](https://user-images.githubusercontent.com/85028821/196158476-bb66cda2-8e8f-45f1-95a9-693f31055b2c.png)
+<img width="662" alt="Screen Shot 2565-10-19 at 18 43 38" src="https://user-images.githubusercontent.com/80901294/196683560-c191c10c-5f44-4d66-849f-6fa6d7a945ce.png">
+
 
 ค่า accuracy เมื่อทำการ evaluate บน test set ได้ค่าอยู่ที่ 0.46124 
 
