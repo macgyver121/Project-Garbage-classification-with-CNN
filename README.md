@@ -416,6 +416,318 @@ print('Duration: {}'.format(end_time - start_time))
 # 2. Resnet50
 ## Original Pre-trained model (Resnet50)
 ## Tuning model (Resnet50)
+# 2. RESNET50
+## 2.1 Original Pre-trained model (RESNET50)
+### Create the base model from the pre-trained convnets
+ทำการโหลด Imagenet resnet50 model มาใช้ โดยเอาในส่วนของ classifier มาด้วย และลบ layer ที่แบ่งข้อมูลออกเป็น 1000 class
+```
+resnet50_extractor = tf.keras.applications.resnet50.ResNet50(include_top=True,weights='imagenet')
+# delete last layer
+from keras.models import Model
+resnet50_extractor= Model(inputs=resnet50_extractor.input, outputs=resnet50_extractor.layers[-2].output)
+
+```
+### Freeze the convolutional base
+ทำการ freeze layer ทั้งหมดใน feature extractor
+```
+resnet50_extractor.trainable = False
+```
+
+### Add a classification head
+ทำการเพิ่มส่วนของ classifier ตาม model ของ resnet50 ใน Keras โดย layer สุดท้ายจะมีการจำแนกข้อมูลเป็น 4 class เนื่องจาก เราต้องการทำนายรูปภาพขยะออกเป็น 4 ประเภท
+
+```
+x = resnet50_extractor.output
+
+# Add our custom layer(s) to the end of the existing model 
+
+new_outputs = tf.keras.layers.Dense(4, activation="softmax")(x)
+
+# Construct the main model 
+model = tf.keras.models.Model(inputs=resnet50_extractor.inputs, outputs=new_outputs)
+
+```
+
+Model flow
+
+See in : ******
+
+
+### Preprocessing input
+ทำการเอาข้อมูลไปเข้า preprocessing ก่อนนำไปใช้ใน model
+```
+np.random.seed(1234)
+tf.random.set_seed(5678)
+
+# Defining data generator withour Data Augmentation
+data_gen = ImageDataGenerator(preprocessing_function=tf.keras.applications.resnet50.preprocess_input, rescale = 1/255., validation_split = 0.3)
+
+train_data = data_gen.flow_from_directory(data_dir, 
+                                          target_size = (224, 224), 
+                                          batch_size = 700,
+                                          subset = 'training',
+                                          class_mode = 'binary')
+test_data = data_gen.flow_from_directory(data_dir, 
+                                        target_size = (224, 224), 
+                                        batch_size = 300,
+                                        subset = 'validation',
+                                        class_mode = 'binary')
+
+```
+### Compile the model
+ทำการ compile กำหนด Arguments ต่างๆของ model 
+```
+model.compile( loss="sparse_categorical_crossentropy", optimizer="adam", metrics=["acc"] )
+```
+- ค่า loss ใช้ sparse_categorical_crossentropy
+- optimizer เป็น Adam
+- metrics เป็น accuracy
+
+### Train the model
+ทำการ run model ด้วย x_train และ y_train และมีการกำหนดให้เลือก weight ที่ให้ค่า accuracy มากสุดไปใช้ใน model สุดท้าย โดยใช้ callbacks
+```
+from datetime import datetime
+start_time = datetime.now()
+
+np.random.seed(1234)
+tf.random.set_seed(5678)
+
+from keras import callbacks
+
+checkpointer = tf.keras.callbacks.ModelCheckpoint(filepath="weights.hdf5", monitor = 'val_acc', verbose=1, save_best_only=True)
+
+history = model.fit( x_train , y_train, batch_size=10, epochs=30, verbose=1, validation_split=0.3, callbacks=[checkpointer] )
+model.load_weights('weights.hdf5')
+
+end_time = datetime.now()
+print('Duration: {}'.format(end_time - start_time))
+```
+
+![image](https://user-images.githubusercontent.com/85028821/195815557-b07e583a-1857-42c8-a88f-0f7768d12907.png)
+
+จะเห็นว่าในการ train ครั้งนี้ค่าที่ดีที่สุดของ accuracy อยู่ที่ 0.5915 และของ validation accuracy อยู่ที่ 0.54098อยู่ใน epoch ที่ 26 โดยเราจะใช้โมเดลใน epoch อันนี้ ในการไปใช้กับ test set ต่อไป  
+
+### Learning curves
+กราฟ accuracy และ กราฟ loss
+
+```
+# Summarize history for accuracy
+plt.figure(figsize=(15,5))
+plt.plot(history.history['acc'])
+plt.plot(history.history['val_acc'])
+plt.title('Train accuracy')
+plt.ylabel('accuracy')
+plt.xlabel('epoch')
+plt.legend(['train', 'val'], loc='upper left')
+plt.grid()
+plt.show()
+
+# Summarize history for loss
+plt.figure(figsize=(15,5))
+plt.plot(history.history['loss'])
+plt.plot(history.history['val_loss'])
+plt.title('Train loss')
+plt.ylabel('loss')
+plt.xlabel('epoch')
+plt.legend(['train', 'val'], loc='upper right')
+plt.grid()
+plt.show()
+```
+
+![image](https://user-images.githubusercontent.com/85028821/195815934-5cd5277c-3474-4e4d-a75f-3a452db53365.png)
+
+![image](https://user-images.githubusercontent.com/85028821/195817457-32f46fab-307a-47ea-a65f-15be86a4d69a.png)
+
+
+### Evaluate on test set
+```
+# Evaluate the trained model on the test set
+start_time = datetime.now()
+
+results = model.evaluate(x_test, y_test, batch_size=32)
+print( f"{model.metrics_names}: {results}" )
+
+end_time = datetime.now()
+print('Duration: {}'.format(end_time - start_time))
+```
+![image](https://user-images.githubusercontent.com/85028821/196142277-c9d976e4-ca05-4d28-9276-c8b36a39be79.png)
+
+ค่า accuracy เมื่อทำการ evaluate บน test set ได้ค่าอยู่ที่ 0.46899 
+
+### Evaluate on test set without seed
+ทำการเอา set seed ในการ train ออก แล้วทำการสร้าง model และ run train กับ test ใหม่ เพื่อหาค่าเฉลี่ยของ accuracy บน test set โดยทำทั้งหมด 3 รอบ
+```
+# create model
+resnet50_extractor = tf.keras.applications.resnet50.ResNet50(weights = "imagenet", include_top=True)
+resnet50_extractor= Model(inputs=resnet50_extractor.input, outputs=resnet50_extractor.layers[-2].output)
+resnet50_extractor.trainable = False
+
+# add classifier
+x = resnet50_extractor.output
+new_outputs = tf.keras.layers.Dense(4, activation="softmax")(x)
+model = tf.keras.models.Model(inputs=resnet50_extractor.inputs, outputs=new_outputs)
+
+#train model without seed
+model.compile( loss="sparse_categorical_crossentropy", optimizer="adam", metrics=["acc"] )
+
+checkpointer = tf.keras.callbacks.ModelCheckpoint(filepath="weights.hdf5", monitor = 'val_acc', verbose=1, save_best_only=True)
+history = model.fit( x_train , y_train, batch_size=10, epochs=30, verbose=1, validation_split=0.3, callbacks=[checkpointer] )
+model.load_weights('weights.hdf5')
+
+#Evaluate on test set without seed
+start_time = datetime.now()
+
+results = model.evaluate(x_test, y_test, batch_size=32)
+print( f"{model.metrics_names}: {results}" )
+
+end_time = datetime.now()
+print('Duration: {}'.format(end_time - start_time))
+
+```
+ผลการทดลอง 3 ครั่ง
+•	ครั่งที่ 1 ค่า acc = 0.3643410801887512
+•	ครั่งที่ 2 ค่า acc = 0.3759689927101135
+•	ครั้งที่ 3 ค่า acc = 0.44186046719551086
+ค่าเฉลี่ย accuracy คือ 0.394
+## 2.2 Tuning model (RESNET50)
+### Create feature extractor
+```
+img_w,img_h = 224,224
+resnet50_extractor = tf.keras.applications.resnet50.ResNet50(include_top=True,weights='imagenet', input_shape = (img_w, img_h, 3))
+resnet50_extractor.trainable = False
+```
+
+### Un-freeze the top layers of the model
+```
+vgg_extractor.layers[-2].trainable = True
+vgg_extractor.layers[-1].trainable = True
+```
+
+### Add a classification head
+```
+x = resnet50_extractor.layers[-2].output
+
+# Add our custom layer(s) to the end of the existing model 
+x = tf.keras.layers.Flatten()(x)
+x = tf.keras.layers.Dense(8192, activation="relu")(x)
+x = tf.keras.layers.Dropout(0.5)(x)
+x = tf.keras.layers.Dense(1024, activation='relu')(x)
+x = tf.keras.layers.Dropout(0.5)(x)
+new_outputs = tf.keras.layers.Dense(4, activation="softmax")(x)
+
+# Construct the main model 
+model = tf.keras.models.Model(inputs=resnet50_extractor.inputs, outputs=new_outputs)
+model.summary()
+```
+
+Model flow
+
+See in : https://user-images.githubusercontent.com/85028821/196160471-87944299-63d6-4516-8128-7c38e8c4a2a0.png
+
+### Compile the model
+ทำการ compile กำหนด Arguments ต่างๆของ model 
+```
+alpha = 0.001
+model.compile( loss="sparse_categorical_crossentropy", optimizer=tf.keras.optimizers.Adamax(learning_rate = alpha) , metrics=["acc"] )
+```
+- ค่า loss ใช้ sparse_categorical_crossentropy
+- optimizer เป็น Adamax กำหนดค่า learning rate เป็น 0.01
+- metrics เป็น accuracy
+
+### Train the model
+ทำการ run model ด้วย x_train และ y_train และมีการกำหนดให้เลือก weight ที่ให้ค่า accuracy มากสุดไปใช้ใน model สุดท้าย โดยใช้ callbacks
+```
+from datetime import datetime
+start_time = datetime.now()
+
+np.random.seed(1234)
+tf.random.set_seed(5678)
+
+from keras import callbacks
+
+checkpointer = tf.keras.callbacks.ModelCheckpoint(filepath="weights.hdf5", monitor = 'val_acc', verbose=1, save_best_only=True)
+
+history = model.fit( x_train , y_train, batch_size=10, epochs=30, verbose=1, validation_split=0.3, callbacks=[checkpointer] )
+model.load_weights('weights.hdf5')
+
+end_time = datetime.now()
+print('Duration: {}'.format(end_time - start_time))
+```
+https://user-images.githubusercontent.com/85028821/196152611-4cabb8af-7476-47eb-a199-44c7f4af32fe.png
+
+จะเห็นว่าในการ train ครั้งนี้ค่าที่ดีที่สุดของ accuracy อยู่ที่ 0.5117 และของ validation accuracy อยู่ที่ 0.54645 อยู่ใน epoch ที่ 23 โดยเราจะใช้โมเดลใน epoch อันนี้ ในการไปใช้กับ test set ต่อไป  
+
+### Learning curves
+กราฟ accuracy และ กราฟ loss
+
+![image](https://user-images.githubusercontent.com/85028821/196158352-1b3acc69-ad29-463e-bc35-dc478a985d5f.png)
+![image](https://user-images.githubusercontent.com/85028821/196158403-c6cfdf60-0eb9-4a30-be3f-1b5b20412b4e.png)
+
+### Evaluate on test set
+```
+# Evaluate the trained model on the test set
+start_time = datetime.now()
+
+results = model.evaluate(x_test, y_test, batch_size=32)
+print( f"{model.metrics_names}: {results}" )
+
+end_time = datetime.now()
+print('Duration: {}'.format(end_time - start_time))
+```
+![image](https://user-images.githubusercontent.com/85028821/196158476-bb66cda2-8e8f-45f1-95a9-693f31055b2c.png)
+
+ค่า accuracy เมื่อทำการ evaluate บน test set ได้ค่าอยู่ที่ 0.46124 
+
+### Evaluate on test set without seed
+ทำการเอา set seed ในการ train ออก แล้วทำการสร้าง model และ run train กับ test ใหม่ เพื่อหาค่าเฉลี่ยของ accuracy บน test set โดยทำทั้งหมด 3 รอบ
+```
+# create model
+img_w,img_h = 224,224 
+resnet50_extractor = tf.keras.applications.resnet50.ResNet50(weights = "imagenet", include_top=True, input_shape = (img_w, img_h, 3))
+
+x = resnet50_extractor.layers[-2].output
+
+# Add our custom layer(s) to the end of the existing model 
+x = tf.keras.layers.Flatten()(x)
+x = tf.keras.layers.Dense(8192, activation="relu")(x)
+x = tf.keras.layers.Dropout(0.5)(x)
+x = tf.keras.layers.Dense(1024, activation='relu')(x)
+x = tf.keras.layers.Dropout(0.5)(x)
+new_outputs = tf.keras.layers.Dense(4, activation="softmax")(x)
+
+model = tf.keras.models.Model(inputs=resnet50_extractor.inputs, outputs=new_outputs)
+
+#train model without seed
+alpha = 0.001
+model.compile( loss="sparse_categorical_crossentropy", optimizer=tf.keras.optimizers.Adamax(learning_rate = alpha) , metrics=["acc"] )
+
+start_time = datetime.now()
+checkpointer = tf.keras.callbacks.ModelCheckpoint(filepath="weights.hdf5", monitor = 'val_acc', verbose=1, save_best_only=True)
+
+history = model.fit( x_train , y_train, batch_size=10, epochs=30, verbose=1, validation_split=0.3, callbacks=[checkpointer] )
+model.load_weights('weights.hdf5')
+
+end_time = datetime.now()
+print('Duration: {}'.format(end_time - start_time))
+
+#Evaluate on test set without seed
+start_time = datetime.now()
+
+results = model.evaluate(x_test, y_test, batch_size=32)
+print( f"{model.metrics_names}: {results}" )
+
+end_time = datetime.now()
+print('Duration: {}'.format(end_time - start_time))
+```
+
+ผลการทดลอง 3 รอบ
+•	ครั้งที่ 1 acc = 0.7209302186965942
+•	ครั้งที่ 2 acc = 0.6976743936538696
+•	ครั่งที่ 3 acc = 0.7093023061752319
+ค่าเฉลี่ย acc ที่ได้คือ 0.7093
+
+![image](https://user-images.githubusercontent.com/80901294/196682165-4e97dfd3-32e0-4737-8863-348b98b47b8d.png)
+
 
 
 # 3. MobileNet
