@@ -889,7 +889,7 @@ print('Duration: {}'.format(end_time - start_time))
 - ครั้งที่ 1 มี accuracy = 0.3233
 - ครั้งที่ 2 มี accuracy = 0.3233
 - ครั้งที่ 3 มี accuracy = 0.3300
-- 
+
 ค่าเฉลี่ย accuracy 3 รอบ ของ test set = 0.3255
 
 ## 3.2 Tuning model (MobileNet)
@@ -1041,7 +1041,7 @@ print('Duration: {}'.format(end_time - start_time))
 - ครั้งที่ 2 มี accuracy = 0.5400
 - ครั้งที่ 3 มี accuracy = 0.5733
 
-ค่าเฉลี่ย accuracy 3 รอบ ของ test set  = 0.57553
+ค่าเฉลี่ย accuracy 3 รอบ ของ test set  = 0.5755
 
 
 # EfficiantNetV2
