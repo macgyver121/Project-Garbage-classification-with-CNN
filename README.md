@@ -413,9 +413,7 @@ print('Duration: {}'.format(end_time - start_time))
 
 ค่าเฉลี่ย accuracy 3 รอบ ของ test set = 0.7162
 
-# 2. Resnet50
-## Original Pre-trained model (Resnet50)
-## Tuning model (Resnet50)
+
 # 2. RESNET50
 ## 2.1 Original Pre-trained model (RESNET50)
 ### Create the base model from the pre-trained convnets
@@ -887,10 +885,12 @@ end_time = datetime.now()
 print('Duration: {}'.format(end_time - start_time))
 ```
 ผลลัพท์ accuracy บน test set 3 รอบคือ
-1. 
-2. 
-3. 
-ค่าเฉลี่ย accuracy 3 รอบ ของ test set = 
+
+- ครั้งที่ 1 มี accuracy = 0.3233
+- ครั้งที่ 2 มี accuracy = 0.3233
+- ครั้งที่ 3 มี accuracy = 0.3300
+- 
+ค่าเฉลี่ย accuracy 3 รอบ ของ test set = 0.3255
 
 ## 3.2 Tuning model (MobileNet)
 ### Create feature extractor
@@ -1037,11 +1037,12 @@ print('Duration: {}'.format(end_time - start_time))
 ```
 
 ผลลัพท์ accuracy บน test set 3 รอบคือ
-1. 0.6133
-2. 0.5400
-3. 0.5733
+- ครั้งที่ 1 มี accuracy = 0.6133
+- ครั้งที่ 2 มี accuracy = 0.5400
+- ครั้งที่ 3 มี accuracy = 0.5733
 
 ค่าเฉลี่ย accuracy 3 รอบ ของ test set  = 0.57553
+
 
 # EfficiantNetV2
 ## Original Pre-trained model (MobileNet)
