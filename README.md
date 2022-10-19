@@ -270,9 +270,9 @@ end_time = datetime.now()
 print('Duration: {}'.format(end_time - start_time))
 ```
 ผลลัพท์ accuracy บน test set 3 รอบคือ
-1. accuracy = 0.6356
-2. accuracy = 0.6468
-3. accuracy = 0.5873
+- ครั้งที่ 1 มี accuracy = 0.6356
+- ครั้งที่ 2 มี accuracy = 0.6468
+- ครั้งที่ 3 มี accuracy = 0.5873
 
 ค่าเฉลี่ย accuracy 3 รอบ ของ test set = 0.6232 
 
@@ -407,9 +407,9 @@ print('Duration: {}'.format(end_time - start_time))
 ```
 
 ผลลัพท์ accuracy บน test set 3 รอบคือ
-1. accuracy = 0.7286
-2. accuracy = 0.7323
-3. accuracy = 0.6877
+- ครั้งที่ 1 มี accuracy = 0.7286
+- ครั้งที่ 2 มี accuracy = 0.7323
+- ครั้งที่ 3 มี accuracy = 0.6877
 
 ค่าเฉลี่ย accuracy 3 รอบ ของ test set = 0.7162
 
@@ -581,11 +581,12 @@ end_time = datetime.now()
 print('Duration: {}'.format(end_time - start_time))
 
 ```
-ผลการทดลอง 3 ครั่ง
-•	ครั่งที่ 1 ค่า acc = 0.3643410801887512
-•	ครั่งที่ 2 ค่า acc = 0.3759689927101135
-•	ครั้งที่ 3 ค่า acc = 0.44186046719551086
-ค่าเฉลี่ย accuracy คือ 0.394
+ผลลัพท์ accuracy บน test set 3 รอบคือ
+- ครั้งที่ 1 มี accuracy = 0.3643410801887512
+- ครั้งที่ 2 มี accuracy = 0.3759689927101135
+- ครั้งที่ 3 มี accuracy = 0.44186046719551086
+ค่าเฉลี่ย accuracy 3 รอบ ของ test set  = 0.394
+
 ## 2.2 Tuning model (RESNET50)
 ### Create feature extractor
 ```
@@ -718,11 +719,11 @@ print('Duration: {}'.format(end_time - start_time))
 
 ```
 
-ผลการทดลอง 3 รอบ
-•	ครั้งที่ 1 acc = 0.7209302186965942
-•	ครั้งที่ 2 acc = 0.6976743936538696
-•	ครั่งที่ 3 acc = 0.7093023061752319
-ค่าเฉลี่ย acc ที่ได้คือ 0.7093
+ผลลัพท์ accuracy บน test set 3 รอบคือ
+- ครั้งที่ 1 มี accuracy = 0.7209302186965942
+- ครั้งที่ 2 มี accuracy = 0.6976743936538696
+- ครั้งที่ 3 มี accuracy = 0.7093023061752319
+ค่าเฉลี่ย accuracy 3 รอบ ของ test set  = 0.7093
 
 
 
@@ -809,7 +810,9 @@ model.load_weights('weights.hdf5')
 end_time = datetime.now()
 print('Duration: {}'.format(end_time - start_time))
 ```
-![ori-epoch](https://user-images.githubusercontent.com/97573140/196716311-95b2cd29-060e-4c4f-87c0-5f4b26cc0df1.png)
+
+![ori-epoch](https://user-images.githubusercontent.com/97573140/196720382-03128ee4-b573-4cd6-bc59-6f199efb6eca.png)
+
 
 ### Learning curves
 กราฟ accuracy และ กราฟ loss
