@@ -680,6 +680,7 @@ print('Duration: {}'.format(end_time - start_time))
 
 ### Evaluate on test set without seed
 ทำการเอา set seed ในการ train ออก แล้วทำการสร้าง model และ run train กับ test ใหม่ เพื่อหาค่าเฉลี่ยของ accuracy บน test set โดยทำทั้งหมด 3 รอบ
+
 ```
 # create model
 img_w,img_h = 224,224 
@@ -718,6 +719,7 @@ print( f"{model.metrics_names}: {results}" )
 
 end_time = datetime.now()
 print('Duration: {}'.format(end_time - start_time))
+
 ```
 
 ผลการทดลอง 3 รอบ
@@ -726,7 +728,6 @@ print('Duration: {}'.format(end_time - start_time))
 •	ครั่งที่ 3 acc = 0.7093023061752319
 ค่าเฉลี่ย acc ที่ได้คือ 0.7093
 
-![image](https://user-images.githubusercontent.com/80901294/196682165-4e97dfd3-32e0-4737-8863-348b98b47b8d.png)
 
 
 
