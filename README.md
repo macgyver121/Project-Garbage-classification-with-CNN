@@ -1053,26 +1053,26 @@ print('Duration: {}'.format(end_time - start_time))
 
 # Conclusion
 
+จากการทำ CNN ทางกลุ่มเราเลือกโมเดลมา 4 แบบ ตามจำนวนสมาชิค ดังนี้
+
+1.VGG-16
 <img width="429" alt="Screen Shot 2565-10-19 at 22 32 25" src="https://user-images.githubusercontent.com/80901294/196737506-af51d89f-292e-4bba-bc4c-543e4b882ed4.png">
 
-
-<img width="429" alt="Screen Shot 2565-10-19 at 22 32 38" src="https://user-images.githubusercontent.com/80901294/196737577-f3e03126-cf99-448a-8702-a6e6549a81f1.png">
-
-<img width="429" alt="Screen Shot 2565-10-19 at 22 32 47" src="https://user-images.githubusercontent.com/80901294/196737673-5a24daa9-d615-42c2-a58d-74c64a4e670c.png">
-
-<img width="429" alt="Screen Shot 2565-10-19 at 22 33 02" src="https://user-images.githubusercontent.com/80901294/196737697-5f9f8a53-cbac-4e8c-8728-b54c3bba43de.png">
-
-จากการทำ CNN ทางกลุ่มเราเลือกโมเดลมา 4 แบบ ตามจำนวนสมาชิค ดังนี้
-1.VGG-16
 ทำการประเมิณโมเดล จาก accuracy หลังจากการทำการปรับmodelแล้ว โดยได้ค่าaccuracyที่ดีขึ้น ใน test set without seed เพิ่มขึ้นจาก  0.6232 เป็น 0.7162 หรือประมาณ 15% โดยวิธีการปรับโมเดลมีดังนี้ ทำการ unfreeze 2 layer สุดท้ายของ feature extractor และปรับ optimizer เป็น Adamax
 
 2.RESNET50
+<img width="429" alt="Screen Shot 2565-10-19 at 22 32 38" src="https://user-images.githubusercontent.com/80901294/196737577-f3e03126-cf99-448a-8702-a6e6549a81f1.png">
+
 ทำการประเมิณโมเดล จาก accuracy หลังจากการทำการปรับmodelแล้ว โดยได้ค่าaccuracyที่ดีขึ้น ใน test set without seed เพิ่มขึ้นจาก  0.3940 เป็น 0.7093 หรือประมาณ 80% โดยวิธีการปรับโมเดลมีดังนี้ ไม่ได้ทำการ unfreeze feature extractor ทั้งหมด, ปรับ optimizer เป็น Adamax และเพิ่ม classifier layer ดังนี้ เพิ่ม 2 dense layer มี acivation เป็น ReLu และขั้นด้วย DropOut ทุก layer
 
 3.MobileNet
+<img width="429" alt="Screen Shot 2565-10-19 at 22 32 47" src="https://user-images.githubusercontent.com/80901294/196737673-5a24daa9-d615-42c2-a58d-74c64a4e670c.png">
+
 ทำการประเมิณโมเดล จาก accuracy หลังจากการทำการปรับmodelแล้ว โดยได้ค่าaccuracyที่ดีขึ้น ใน test set without seed เพิ่มขึ้นจาก  0.3255 เป็น 0.5755 หรือประมาณ 77% โดยวิธีการปรับโมเดลมีดังนี้ ไม่ได้ทำการ unfreeze feature extractor ทั้งหมด, ปรับ optimizer เป็น Adamax และเพิ่ม classifier layer ดังนี้ เพิ่ม 2 dense layer มี acivation เป็น ReLu และ DropOut
 
 4.EfficiantNetV2
+<img width="429" alt="Screen Shot 2565-10-19 at 22 33 02" src="https://user-images.githubusercontent.com/80901294/196737697-5f9f8a53-cbac-4e8c-8728-b54c3bba43de.png">
+
 ทำการประเมิณโมเดล จาก accuracy หลังจากการทำการปรับmodelแล้ว โดยได้ค่าaccuracyที่ดีขึ้น ใน test set without seed เพิ่มขึ้นจาก  0.3184 เป็น 0.6604 หรือประมาณ 107% 
 โดยวิธีการปรับโมเดลมีดังนี้ ทำการ unfreeze feature extractor ทั้งหมด, ปรับ optimizer เป็น Adamax, มีการทำ Data Augmentation ตอน  Pre-Processing input 
 และเพิ่ม classifier layer ดังนี้ เพิ่ม 2 dense layer มี acivation เป็น ReLu และขั้นด้วย DropOut ทุก layer
