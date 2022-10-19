@@ -533,6 +533,7 @@ plt.show()
 ```
 ![ผลtrain](https://user-images.githubusercontent.com/80901294/196682961-a2ce57e5-8c08-465f-97aa-24b622474de6.png)
 
+![Unknown](https://user-images.githubusercontent.com/80901294/196750662-ae737336-d87a-47ec-b772-a7c06a4d7fc6.png)
 
 
 ### Evaluate on test set
@@ -660,7 +661,10 @@ print('Duration: {}'.format(end_time - start_time))
 กราฟ accuracy และ กราฟ loss
 ![ผลtrain](https://user-images.githubusercontent.com/80901294/196683489-f0879f5a-549e-403e-ae81-8a1cdd2bc20a.png)
 
-### Evaluate on test set
+[Unknown-2](https://user-images.githubusercontent.com/80901294/196751099-edc7c9db-ced5-4a3f-ac70-c7d8ca48f2b3.png)
+
+
+### Evaluate on test set!
 ```
 # Evaluate the trained model on the test set
 start_time = datetime.now()
