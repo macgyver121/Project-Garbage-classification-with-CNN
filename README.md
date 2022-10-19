@@ -585,6 +585,7 @@ print('Duration: {}'.format(end_time - start_time))
 - ครั้งที่ 1 มี accuracy = 0.3643410801887512
 - ครั้งที่ 2 มี accuracy = 0.3759689927101135
 - ครั้งที่ 3 มี accuracy = 0.44186046719551086
+
 ค่าเฉลี่ย accuracy 3 รอบ ของ test set  = 0.394
 
 ## 2.2 Tuning model (RESNET50)
@@ -723,9 +724,8 @@ print('Duration: {}'.format(end_time - start_time))
 - ครั้งที่ 1 มี accuracy = 0.7209302186965942
 - ครั้งที่ 2 มี accuracy = 0.6976743936538696
 - ครั้งที่ 3 มี accuracy = 0.7093023061752319
+
 ค่าเฉลี่ย accuracy 3 รอบ ของ test set  = 0.7093
-
-
 
 
 # 3. MobileNet
