@@ -450,7 +450,7 @@ model = tf.keras.models.Model(inputs=resnet50_extractor.inputs, outputs=new_outp
 
 Model flow
 
-See in : ******
+See in : https://user-images.githubusercontent.com/80901294/196710788-333cefc7-0518-47ae-9346-24b3628965a4.png
 
 
 ### Preprocessing input
