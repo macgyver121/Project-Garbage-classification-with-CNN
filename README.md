@@ -1054,6 +1054,16 @@ print('Duration: {}'.format(end_time - start_time))
 # Conclusion
 
 ทำตาราง 8 row
+<img width="429" alt="Screen Shot 2565-10-19 at 22 32 25" src="https://user-images.githubusercontent.com/80901294/196737506-af51d89f-292e-4bba-bc4c-543e4b882ed4.png">
+
+
+<img width="429" alt="Screen Shot 2565-10-19 at 22 32 38" src="https://user-images.githubusercontent.com/80901294/196737577-f3e03126-cf99-448a-8702-a6e6549a81f1.png">
+
+<img width="429" alt="Screen Shot 2565-10-19 at 22 32 47" src="https://user-images.githubusercontent.com/80901294/196737673-5a24daa9-d615-42c2-a58d-74c64a4e670c.png">
+
+<img width="429" alt="Screen Shot 2565-10-19 at 22 33 02" src="https://user-images.githubusercontent.com/80901294/196737697-5f9f8a53-cbac-4e8c-8728-b54c3bba43de.png">
+
+
 
 เขียนสรุป
 
