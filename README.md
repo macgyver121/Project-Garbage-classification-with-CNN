@@ -661,7 +661,7 @@ print('Duration: {}'.format(end_time - start_time))
 กราฟ accuracy และ กราฟ loss
 ![ผลtrain](https://user-images.githubusercontent.com/80901294/196683489-f0879f5a-549e-403e-ae81-8a1cdd2bc20a.png)
 
-[Unknown-2](https://user-images.githubusercontent.com/80901294/196751099-edc7c9db-ced5-4a3f-ac70-c7d8ca48f2b3.png)
+![Unknown-2](https://user-images.githubusercontent.com/80901294/196751099-edc7c9db-ced5-4a3f-ac70-c7d8ca48f2b3.png)
 
 
 ### Evaluate on test set!
