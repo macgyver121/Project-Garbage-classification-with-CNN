@@ -811,8 +811,7 @@ model.load_weights('weights.hdf5')
 end_time = datetime.now()
 print('Duration: {}'.format(end_time - start_time))
 ```
-ขาดรูปepoch
-จะเห็นว่าในการ train ครั้งนี้ค่าที่ดีที่สุดของ accuracy อยู่ที่ 0.9227 และของ validation accuracy อยู่ที่ 0.8201 อยู่ใน epoch ที่ 3 โดยเราจะใช้โมเดลใน epoch อันนี้ ในการไปใช้กับ test set ต่อไป  
+![ori-epoch](https://user-images.githubusercontent.com/97573140/196716311-95b2cd29-060e-4c4f-87c0-5f4b26cc0df1.png)
 
 ### Learning curves
 กราฟ accuracy และ กราฟ loss
@@ -840,7 +839,9 @@ plt.legend(['train', 'val'], loc='upper right')
 plt.grid()
 plt.show()
 ```
-ขาดรูปกราฟ
+![ori-graph1](https://user-images.githubusercontent.com/97573140/196716416-4eae4510-b50c-461b-87ac-2e8364b9f76c.png)
+![ori-graph2](https://user-images.githubusercontent.com/97573140/196716647-395eaa4e-b308-426c-8a79-acbf43598fb6.png)
+
 
 ### Evaluate on test set
 ```
@@ -853,8 +854,9 @@ print( f"{model.metrics_names}: {results}" )
 end_time = datetime.now()
 print('Duration: {}'.format(end_time - start_time))
 ```
-ขาดรูปผลการรัน
-ค่า accuracy เมื่อทำการ evaluate บน test set ได้ค่าอยู่ที่ 0.6208 
+
+![ori-acc](https://user-images.githubusercontent.com/97573140/196717104-17a309f0-ffab-4ce8-83c0-2575cc597113.png)
+
 
 ### Evaluate on test set without seed
 ```
