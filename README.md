@@ -1218,7 +1218,7 @@ model = tf.keras.models.Model(inputs=effnet_v2.inputs, outputs=new_outputs)
 model.compile( loss="sparse_categorical_crossentropy", optimizer="adam", metrics=["acc"] )
 
 checkpointer = tf.keras.callbacks.ModelCheckpoint(filepath="weights.hdf5", monitor = 'val_acc', verbose=1, save_best_only=True)
-history = model.fit( x_train , y_train, batch_size=10, epochs=10, verbose=1, validation_split=0.3, callbacks=[checkpointer] )
+history = model.fit( x_train , y_train, batch_size=10, epochs=30, verbose=1, validation_split=0.3, callbacks=[checkpointer] )
 model.load_weights('weights.hdf5')
 #Evaluate on test set without seed
 start_time = datetime.now()
