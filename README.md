@@ -1432,7 +1432,7 @@ print('Duration: {}'.format(end_time - start_time))
 
 4.EfficiantNetV2
 
-<img width="429" alt="Screen Shot 2565-10-19 at 22 33 02" src="https://user-images.githubusercontent.com/80901294/196737697-5f9f8a53-cbac-4e8c-8728-b54c3bba43de.png">
+<img width="504" alt="Screen Shot 2565-10-20 at 15 53 03" src="https://user-images.githubusercontent.com/80901294/196903292-d4c009c4-f3ee-4475-ba6d-a33753fecfb7.png">
 
 ทำการประเมิณโมเดล จาก accuracy หลังจากการทำการปรับmodelแล้ว โดยได้ค่าaccuracyที่ดีขึ้น ใน test set without seed เพิ่มขึ้นจาก  0.3184 เป็น 0.6604 หรือประมาณ 107% 
 โดยวิธีการปรับโมเดลมีดังนี้ ทำการ unfreeze feature extractor ทั้งหมด, ปรับ optimizer เป็น Adamax, มีการทำ Data Augmentation ตอน  Pre-Processing input 
