@@ -1278,7 +1278,8 @@ model.summary()
 
 Model flow
 
-See in : *************************************
+See in : https://user-images.githubusercontent.com/97610480/196865785-cc39b731-7fad-47be-aa2b-c64c4bb491e7.png
+
 
 ### Compile the model
 ทำการ compile กำหนด Arguments ต่างๆของ model 
