@@ -1237,7 +1237,7 @@ print('Duration: {}'.format(end_time - start_time))
 
 ค่าเฉลี่ยของ accuracy ที่ได้คือประมาณ 0.3184
 
-## 4.2 Tuning model (.EfficientNetV2B1)
+## 4.2 Tuning model (EfficientNetV2B1)
 ### Create feature extractor
 ```
 img_w,img_h = 240,240
