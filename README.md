@@ -1273,7 +1273,7 @@ new_outputs = tf.keras.layers.Dense(4, activation="softmax")(x)
 # Construct the main model 
 model = tf.keras.models.Model(inputs=effnet_v2.inputs, outputs=new_outputs)
 # Construct the main model 
-model = tf.keras.models.Model(inputs=vgg_extractor.inputs, outputs=new_outputs)
+model = tf.keras.models.Model(inputs=effnet_v2.inputs, outputs=new_outputs)
 model.summary()
 ```
 
@@ -1337,7 +1337,7 @@ print('Duration: {}'.format(end_time - start_time))
 ```
 ![image](https://user-images.githubusercontent.com/97610480/196897204-9cad4e82-7c89-4135-882d-94cde623a9a8.png)
 
-ค่า accuracy เมื่อทำการ evaluate บน test set ได้ค่าอยู่ที่ 0.6691
+ค่า accuracy เมื่อทำการ evaluate บน test set ได้ค่าอยู่ที่ 0.6914
 
 ### Evaluate on test set without seed
 ทำการเอา set seed ในการ train ออก แล้วทำการสร้าง model และ run train กับ test ใหม่ เพื่อหาค่าเฉลี่ยของ accuracy บน test set โดยทำทั้งหมด 3 รอบ
