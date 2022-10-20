@@ -1315,7 +1315,7 @@ print('Duration: {}'.format(end_time - start_time))
 
 ![image](https://user-images.githubusercontent.com/97610480/196896847-4ab27b2c-3cfe-44a1-a3d5-73b92a3b16a6.png)
 
-จากการ Fine-tuning ในครั้งนี้เราได้ accuracy สูงสุดที่ 0.8052 ซึ่งดีกว่า based model ค่อนข้างเยอะ
+จากการ Fine-tuning ในครั้งนี้เราได้ accuracy สูงสุดที่ 0.8158 ซึ่งดีกว่า based model ค่อนข้างเยอะ
 
 ### Learning curves
 กราฟ accuracy และ กราฟ loss
