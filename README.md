@@ -1229,10 +1229,10 @@ print( f"{model.metrics_names}: {results}" )
 end_time = datetime.now()
 print('Duration: {}'.format(end_time - start_time))
 ```
-ค่า accuracy ที่ได้ 3 รอบคือ
-1.
-2.
-3.
+ผลลัพท์ accuracy บน test set 3 รอบคือ
+- ครั้งที่ 1 มี accuracy = 0.3381
+- ครั้งที่ 2 มี accuracy = 0.3197
+- ครั้งที่ 3 มี accuracy = 0.2973
 
 ค่าเฉลี่ยของ accuracy ที่ได้คือประมาณ 0.3184
 
@@ -1395,9 +1395,12 @@ print( f"{model.metrics_names}: {results}" )
 end_time = datetime.now()
 print('Duration: {}'.format(end_time - start_time))
 ```
-1.
-2.
-3.
+
+ผลลัพท์ accuracy บน test set 3 รอบคือ
+- ครั้งที่ 1 มี accuracy = 0.6988
+- ครั้งที่ 2 มี accuracy = 0.6319
+- ครั้งที่ 3 มี accuracy = 0.6505
+
 ค่าเฉลี่ย accuracy 3 รอบ ของ test set = 0.0.6604
 
 
