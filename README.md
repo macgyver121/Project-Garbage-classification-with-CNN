@@ -1096,7 +1096,7 @@ See in : https://user-images.githubusercontent.com/97610480/196891983-9c9a0a7e-d
 
 
 ### Preprocessing input
-มีการทำ Data Augmentation เพราะช่วยให้ data set มีความ wary ขึ้น
+มีการทำ Data Augmentation เพราะช่วยให้ data set มีความ various ขึ้น
 ```
 # Defining data generator withour Data Augmentation
 np.random.seed(1234)
