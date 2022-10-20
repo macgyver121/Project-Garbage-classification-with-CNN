@@ -1092,7 +1092,7 @@ model = tf.keras.models.Model(inputs= effnet_v2.inputs, outputs=new_outputs)
 
 Model flow
 
-See in : ***********************************
+See in : https://user-images.githubusercontent.com/97610480/196891983-9c9a0a7e-d0a6-4dca-b3d7-3e257a576490.png
 
 
 ### Preprocessing input
@@ -1150,7 +1150,8 @@ end_time = datetime.now()
 print('Duration: {}'.format(end_time - start_time))
 ```
 
-![image](https://user-images.githubusercontent.com/85028821/195815557-b07e583a-1857-42c8-a88f-0f7768d12907.png)
+![image](https://user-images.githubusercontent.com/97610480/196892343-915cec2a-6daf-4f55-8aa2-913061f68dc3.png)
+
 
 ผลลัพท์ที่ออกมาไม่ค่อยดีนัก เพราะได้ validation accuracy ที่ดีสุดแค่ 0.3736
 
@@ -1181,9 +1182,9 @@ plt.grid()
 plt.show()
 ```
 
-![image](https://user-images.githubusercontent.com/85028821/195815934-5cd5277c-3474-4e4d-a75f-3a452db53365.png)
+![image](https://user-images.githubusercontent.com/97610480/196892428-f2903676-3a23-4a92-b699-598287710aa2.png)
 
-![image](https://user-images.githubusercontent.com/85028821/195817457-32f46fab-307a-47ea-a65f-15be86a4d69a.png)
+![image](https://user-images.githubusercontent.com/97610480/196892482-212097eb-8a08-4a40-b8da-7ca43b087345.png)
 
 
 ### Evaluate on test set
@@ -1197,7 +1198,7 @@ print( f"{model.metrics_names}: {results}" )
 end_time = datetime.now()
 print('Duration: {}'.format(end_time - start_time))
 ```
-![image](https://user-images.githubusercontent.com/85028821/196142277-c9d976e4-ca05-4d28-9276-c8b36a39be79.png)
+![image](https://user-images.githubusercontent.com/97610480/196892637-977049d2-448c-43d9-979b-123d2eed3216.png)
 
 ค่า accuracy เมื่อทำการ evaluate บน test set ได้ค่าอยู่ที่ 0.353
 
@@ -1278,7 +1279,7 @@ model.summary()
 
 Model flow
 
-See in : https://user-images.githubusercontent.com/97610480/196865785-cc39b731-7fad-47be-aa2b-c64c4bb491e7.png
+See in : https://user-images.githubusercontent.com/97610480/196896696-ed66f168-eb77-4bb9-898c-115c2c0f026e.png
 
 
 ### Compile the model
@@ -1311,15 +1312,17 @@ model.load_weights('weights.hdf5')
 end_time = datetime.now()
 print('Duration: {}'.format(end_time - start_time))
 ```
-https://user-images.githubusercontent.com/85028821/196152611-4cabb8af-7476-47eb-a199-44c7f4af32fe.png
+
+![image](https://user-images.githubusercontent.com/97610480/196896847-4ab27b2c-3cfe-44a1-a3d5-73b92a3b16a6.png)
 
 จากการ Fine-tuning ในครั้งนี้เราได้ accuracy = 0.8052 ซึ่งดีกว่า based model ค่อนข้างเยอะ
 
 ### Learning curves
 กราฟ accuracy และ กราฟ loss
 
-![image](https://user-images.githubusercontent.com/85028821/196158352-1b3acc69-ad29-463e-bc35-dc478a985d5f.png)
-![image](https://user-images.githubusercontent.com/85028821/196158403-c6cfdf60-0eb9-4a30-be3f-1b5b20412b4e.png)
+![image](https://user-images.githubusercontent.com/97610480/196897127-3f5d17c2-136a-47e0-8e3d-35a683ade065.png)
+![image](https://user-images.githubusercontent.com/97610480/196897060-d249d71b-4857-4409-97cb-a31f376b57ea.png)
+
 
 ### Evaluate on test set
 ```
@@ -1332,7 +1335,7 @@ print( f"{model.metrics_names}: {results}" )
 end_time = datetime.now()
 print('Duration: {}'.format(end_time - start_time))
 ```
-![image](https://user-images.githubusercontent.com/85028821/196158476-bb66cda2-8e8f-45f1-95a9-693f31055b2c.png)
+![image](https://user-images.githubusercontent.com/97610480/196897204-9cad4e82-7c89-4135-882d-94cde623a9a8.png)
 
 ค่า accuracy เมื่อทำการ evaluate บน test set ได้ค่าอยู่ที่ 0.6691
 
