@@ -1407,6 +1407,8 @@ print('Duration: {}'.format(end_time - start_time))
 
 ค่าเฉลี่ย accuracy 3 รอบ ของ test set = 0.0.6604
 
+# Inference
+
 ![image](https://user-images.githubusercontent.com/85028821/235472043-4ff8c2cb-84e7-4289-9647-c46b28cdad7e.png)
 
 # Conclusion
